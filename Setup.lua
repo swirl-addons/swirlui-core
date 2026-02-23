@@ -488,17 +488,6 @@ local function ApplyAuraSettings()
     end
 end
 
-local function ApplyTooltipSettings()
-    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.tooltip then
-        if SwirlUIDB.uiSettings.tooltip.enabled then
-            SwirlUI:StyleTooltip()
-        end
-        if SwirlUIDB.uiSettings.tooltip.attachToCursor then
-            hooksecurefunc("GameTooltip_SetDefaultAnchor", function(s,p) s:SetOwner(p, "ANCHOR_CURSOR_RIGHT", 10, 0) end)
-        end
-    end
-end
-
 local function ApplyUISettings()
     ApplyChatBubbleSettings()
     ApplyUIErrorsSettings()
@@ -506,7 +495,6 @@ local function ApplyUISettings()
     ApplyQuestObjectivesSettings()
     ApplyMouseClickSettings()
     ApplyAuraSettings()
-    ApplyTooltipSettings()
 end
 
 local function RegisterUISettingsCallbacks()
@@ -521,7 +509,6 @@ local function RegisterUISettingsCallbacks()
     AF.RegisterCallback("SwirlUI_AbstractFrameworkPopups_Changed", MoveAbstractFrameworkPopups, "medium", "AbstractFrameworkPopupsUpdate")
     AF.RegisterCallback("SwirlUI_MouseClick_Changed", ApplyMouseClickSettings, "medium", "MouseClickUpdate")
     AF.RegisterCallback("SwirlUI_Auras_Changed", ApplyAuraSettings, "medium", "AurasUpdate")
-    AF.RegisterCallback("SwirlUI_Tooltip_Changed", ApplyTooltipSettings, "medium", "TooltipUpdate")
 end
 
 local function CheckProfileVersionUpdates()
