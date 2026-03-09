@@ -143,107 +143,11 @@ function ApplyMouseClickSettings()
     end
 end
 
-local function CreateAuraBorder(auraFrame)
-    if auraFrame.Border then return end
-
-    local border = CreateFrame("Frame", nil, auraFrame)
-    border:SetAllPoints(auraFrame.Icon)
-    border:SetFrameLevel(auraFrame:GetFrameLevel() - 1)
-    auraFrame.Border = border
-
-    local borders = {
-        {points = {"TOPLEFT", "TOPRIGHT"}, size = "Height"},
-        {points = {"BOTTOMLEFT", "BOTTOMRIGHT"}, size = "Height"},
-        {points = {"TOPLEFT", "BOTTOMLEFT"}, size = "Width"},
-        {points = {"TOPRIGHT", "BOTTOMRIGHT"}, size = "Width"},
-    }
-
-    for _, borderData in ipairs(borders) do
-        local edge = border:CreateTexture(nil, "OVERLAY")
-        edge:SetColorTexture(0, 0, 0, 1)
-        edge:SetPoint(borderData.points[1], 0, 0)
-        edge:SetPoint(borderData.points[2], 0, 0)
-        edge["Set" .. borderData.size](edge, 1)
-    end
-end
-
-local function SkinAuras(auraFrame)
-    if auraFrame.isAuraAnchor or not auraFrame.Icon then return end
-
-    local auraSizes = SwirlUIDB.uiSettings.skinAuras
-    auraFrame.Icon:SetSize(auraSizes.width or 32, auraSizes.height or 32)
-    auraFrame.Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-
-    if auraFrame.DebuffBorder then
-        auraFrame.DebuffBorder:Hide()
-        auraFrame.DebuffBorder:SetAlpha(0)
-        auraFrame.DebuffBorder:SetTexture(nil)
-    elseif auraFrame.BuffBorder then
-        auraFrame.BuffBorder:SetTexture(nil)
-    end
-
-    if not auraFrame.Border then
-        CreateAuraBorder(auraFrame)
-    end
-
-    local width, height = auraFrame:GetSize()
-    if width and height and width > 0 and height > 0 then
-        auraFrame.Border:ClearAllPoints()
-        auraFrame.Border:SetPoint("TOPLEFT", auraFrame.Icon, "TOPLEFT", -1, 1)
-        auraFrame.Border:SetPoint("BOTTOMRIGHT", auraFrame.Icon, "BOTTOMRIGHT", 1, -1)
-    end
-
-    if auraFrame.Duration then
-        auraFrame.Duration:ClearAllPoints()
-        auraFrame.Duration:SetPoint("CENTER", auraFrame.Icon, "CENTER", 0, 0)
-        local fontSize = (SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.skinAuras and SwirlUIDB.uiSettings.skinAuras.fontSize) or 12
-        auraFrame.Duration:SetFont(SwirlUI.Font, fontSize, "OUTLINE")
-        auraFrame.Duration:SetShadowOffset(0, 0)
-    end
-
-    if auraFrame.Count then
-        auraFrame.Count:ClearAllPoints()
-        auraFrame.Count:SetPoint("BOTTOMRIGHT", auraFrame.Icon, "BOTTOMRIGHT", 0, 1)
-        local fontSize = (SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.skinAuras and SwirlUIDB.uiSettings.skinAuras.fontSize) or 12
-        auraFrame.Count:SetFont(SwirlUI.Font, fontSize, "OUTLINE")
-    end
-end
-
-local function SkinAuraFrames()
-    local frames = {BuffFrame, DebuffFrame}
-    for _, frame in pairs(frames) do
-        if frame and frame.auraFrames then
-            if frame.CollapseAndExpandButton then
-                frame.CollapseAndExpandButton:SetAlpha(0)
-                frame.CollapseAndExpandButton:SetScript("OnClick", nil)
-            end
-
-            for _, auraFrame in pairs(frame.auraFrames) do
-                SkinAuras(auraFrame)
-            end
-        end
-    end
-end
-
-local function SetupAuraHooks()
-    hooksecurefunc(EditModeManagerFrame, "EnterEditMode", function() SkinAuraFrames() end)
-    hooksecurefunc(EditModeManagerFrame, "ExitEditMode", function() SkinAuraFrames() end)
-    hooksecurefunc(DebuffFrame, "UpdateAuraButtons", function() SkinAuraFrames() end)
-end
-
-local function ApplyAuraSettings()
-    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.skinAuras and SwirlUIDB.uiSettings.skinAuras.enabled then
-        SkinAuraFrames()
-        SetupAuraHooks()
-    end
-end
-
 local function ApplyUISettings()
     ApplyChatBubbleSettings()
     ApplyUIErrorsSettings()
     ApplyActionStatusSettings()
     ApplyMouseClickSettings()
-    ApplyAuraSettings()
 end
 
 local function RegisterUISettingsCallbacks()
@@ -255,7 +159,6 @@ local function RegisterUISettingsCallbacks()
     AF.RegisterCallback("SwirlUI_ActionStatus_Changed", ApplyActionStatusSettings, "medium", "ActionStatusUpdate")
     AF.RegisterCallback("SwirlUI_AbstractFrameworkPopups_Changed", MoveAbstractFrameworkPopups, "medium", "AbstractFrameworkPopupsUpdate")
     AF.RegisterCallback("SwirlUI_MouseClick_Changed", ApplyMouseClickSettings, "medium", "MouseClickUpdate")
-    AF.RegisterCallback("SwirlUI_Auras_Changed", ApplyAuraSettings, "medium", "AurasUpdate")
 end
 
 local function CheckProfileVersionUpdates()
