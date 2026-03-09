@@ -213,23 +213,6 @@ local function CreateQuestObjectivesGroup(scrollContent, previousGroup, bordered
     return questObjectivesGroup
 end
 
-local function CreateChatGroup(scrollContent, previousGroup, borderedFrameWidth)
-    local chatGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 34, "background2", "black")
-    chatGroup:SetLabel("Chat")
-    AF.SetPoint(chatGroup, "TOPLEFT", previousGroup, "BOTTOMLEFT", 0, -25)
-    SetGroupHoverEffect(chatGroup)
-
-    local chatEnabled = AF.CreateCheckButton(chatGroup, "Remove Text Shadows", function(checked)
-        SwirlUIDB.uiSettings.chat.disableChatShadows = checked
-        AF.Fire("SwirlUI_Chat_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(chatEnabled, "TOPLEFT", chatGroup, "TOPLEFT", 5, -10)
-    chatEnabled:SetChecked(SwirlUIDB.uiSettings.chat.disableChatShadows)
-
-    return chatGroup
-end
-
 local function CreateMouseClickGroup(scrollContent, previousGroup, borderedFrameWidth)
     local mouseClickGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 58, "background2", "black")
     mouseClickGroup:SetLabel("Mouse Click")
@@ -341,8 +324,7 @@ local function CreateOptionsTab()
     local uiErrorsGroup = CreateUIErrorsGroup(scrollFrame.scrollContent, chatBubblesGroup, borderedFrameWidth)
     local actionStatusGroup = CreateActionStatusGroup(scrollFrame.scrollContent, uiErrorsGroup, borderedFrameWidth)
     local questObjectivesGroup = CreateQuestObjectivesGroup(scrollFrame.scrollContent, actionStatusGroup, borderedFrameWidth)
-    local chatGroup = CreateChatGroup(scrollFrame.scrollContent, questObjectivesGroup, borderedFrameWidth)
-    local mouseClickGroup = CreateMouseClickGroup(scrollFrame.scrollContent, chatGroup, borderedFrameWidth)
+    local mouseClickGroup = CreateMouseClickGroup(scrollFrame.scrollContent, questObjectivesGroup, borderedFrameWidth)
     local aurasGroup = CreateAurasGroup(scrollFrame.scrollContent, mouseClickGroup, borderedFrameWidth)
 
     scrollFrame:SetContentHeight(1005)

@@ -4,17 +4,6 @@ local PLAYER_CLASS = select(2, UnitClass("player"))
 local PLAYER_CLASS_COLOR = RAID_CLASS_COLORS[PLAYER_CLASS]
 local PLAYER_CLASS_COLOR_HEX = CreateColor(PLAYER_CLASS_COLOR.r, PLAYER_CLASS_COLOR.g, PLAYER_CLASS_COLOR.b):GenerateHexColor()
 
-local function ChatRemoveShadows()
-    if not C_AddOns.IsAddOnLoaded("Prat-3.0") then return end
-    if not SwirlUIDB or not SwirlUIDB.uiSettings or not SwirlUIDB.uiSettings.chat.disableChatShadows then return end
-    for i = 1, NUM_CHAT_WINDOWS do
-       local chatFrame = _G["ChatFrame" .. i]
-        chatFrame:SetShadowColor(0, 0, 0, 1)
-        chatFrame:SetShadowOffset(0, 0) 
-    end
-    CommunitiesFrame.Chat.MessageFrame:SetShadowOffset(0, 0)
-end
-
 local function DetailsRemoveShadows()
     if not C_AddOns.IsAddOnLoaded("Details") then return end
     
@@ -30,7 +19,6 @@ local function DetailsRemoveShadows()
 end
 
 local function AddOnSetups()
-    ChatRemoveShadows()
     DetailsRemoveShadows()
 end
 
@@ -346,7 +334,6 @@ local function RegisterUISettingsCallbacks()
     AF.RegisterCallback("SwirlUI_UIErrors_Changed", ApplyUIErrorsSettings, "medium", "UIErrorsUpdate")
     AF.RegisterCallback("SwirlUI_ActionStatus_Changed", ApplyActionStatusSettings, "medium", "ActionStatusUpdate")
     AF.RegisterCallback("SwirlUI_QuestObjectives_Changed", ApplyQuestObjectivesSettings, "medium", "QuestObjectivesUpdate")
-    AF.RegisterCallback("SwirlUI_Chat_Changed", ChatRemoveShadows, "medium", "ChatUpdate")
     AF.RegisterCallback("SwirlUI_AbstractFrameworkPopups_Changed", MoveAbstractFrameworkPopups, "medium", "AbstractFrameworkPopupsUpdate")
     AF.RegisterCallback("SwirlUI_MouseClick_Changed", ApplyMouseClickSettings, "medium", "MouseClickUpdate")
     AF.RegisterCallback("SwirlUI_Auras_Changed", ApplyAuraSettings, "medium", "AurasUpdate")
