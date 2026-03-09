@@ -85,30 +85,6 @@ local function MinimapData()
     BugSackMinimapButton()
 end
 
-local function SetupFrameAlphas()
-    local Frames = {
-        ZoneTextFrame,
-        SubZoneTextFrame,
-        ObjectiveTrackerFrame.Header.Background,
-        QuestObjectiveTracker.Header.Background,
-        WorldQuestObjectiveTracker.Header.Background,
-        ScenarioObjectiveTracker.Header.Background,
-        MonthlyActivitiesObjectiveTracker.Header.Background,
-        BonusObjectiveTracker.Header.Background,
-        ProfessionsRecipeTracker.Header.Background,
-        AchievementObjectiveTracker.Header.Background,
-        CampaignQuestObjectiveTracker.Header.Background,
-    }
-    for _, Frame in pairs(Frames) do
-        Frame:SetAlpha(0)
-        Frame:Hide()
-        Frame:SetScript("OnShow", function(Frame) 
-            Frame:SetAlpha(0)
-            Frame:Hide()
-        end)
-    end
-end
-
 local function ApplyChatBubbleSettings()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.chatBubbles.enabled then
         ChatBubbleFont:SetFont(SwirlUI.Font, SwirlUIDB.uiSettings.chatBubbles.fontSize, "OUTLINE")
@@ -130,18 +106,6 @@ local function ApplyActionStatusSettings()
         ActionStatus.Text:SetShadowOffset(0, 0)
         ActionStatus.Text:ClearAllPoints()
         ActionStatus.Text:SetPoint("CENTER", UIParent, "CENTER", SwirlUIDB.uiSettings.actionStatus.offsetX, SwirlUIDB.uiSettings.actionStatus.offsetY)
-    end
-end
-
-local function ApplyQuestObjectivesSettings()
-    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.questObjectives.enabled then
-        ObjectiveTrackerLineFont:SetFont(SwirlUI.Font, SwirlUIDB.uiSettings.questObjectives.fontSize, "OUTLINE")
-        ObjectiveTrackerLineFont:SetShadowOffset(0, 0)
-        ObjectiveTrackerHeaderFont:SetFont(SwirlUI.Font, SwirlUIDB.uiSettings.questObjectives.fontSize, "OUTLINE")
-        ObjectiveTrackerHeaderFont:SetShadowOffset(0, 0)
-        if SwirlUIDB.uiSettings.questObjectives.removeGraphics then
-            SetupFrameAlphas()
-        end
     end
 end
 
@@ -278,7 +242,6 @@ local function ApplyUISettings()
     ApplyChatBubbleSettings()
     ApplyUIErrorsSettings()
     ApplyActionStatusSettings()
-    ApplyQuestObjectivesSettings()
     ApplyMouseClickSettings()
     ApplyAuraSettings()
 end
@@ -290,7 +253,6 @@ local function RegisterUISettingsCallbacks()
     AF.RegisterCallback("SwirlUI_ChatBubbles_Changed", ApplyChatBubbleSettings, "medium", "ChatBubblesUpdate")
     AF.RegisterCallback("SwirlUI_UIErrors_Changed", ApplyUIErrorsSettings, "medium", "UIErrorsUpdate")
     AF.RegisterCallback("SwirlUI_ActionStatus_Changed", ApplyActionStatusSettings, "medium", "ActionStatusUpdate")
-    AF.RegisterCallback("SwirlUI_QuestObjectives_Changed", ApplyQuestObjectivesSettings, "medium", "QuestObjectivesUpdate")
     AF.RegisterCallback("SwirlUI_AbstractFrameworkPopups_Changed", MoveAbstractFrameworkPopups, "medium", "AbstractFrameworkPopupsUpdate")
     AF.RegisterCallback("SwirlUI_MouseClick_Changed", ApplyMouseClickSettings, "medium", "MouseClickUpdate")
     AF.RegisterCallback("SwirlUI_Auras_Changed", ApplyAuraSettings, "medium", "AurasUpdate")

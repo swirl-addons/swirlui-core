@@ -179,40 +179,6 @@ local function CreateActionStatusGroup(scrollContent, previousGroup, borderedFra
     return actionStatusGroup
 end
 
-local function CreateQuestObjectivesGroup(scrollContent, previousGroup, borderedFrameWidth)
-    local questObjectivesGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 82, "background2", "black")
-    questObjectivesGroup:SetLabel("Quest Objectives")
-    AF.SetPoint(questObjectivesGroup, "TOPLEFT", previousGroup, "BOTTOMLEFT", 0, -25)
-    SetGroupHoverEffect(questObjectivesGroup)
-
-    local questObjectivesEnabled = AF.CreateCheckButton(questObjectivesGroup, "Enable", function(checked)
-        SwirlUIDB.uiSettings.questObjectives.enabled = checked
-        AF.Fire("SwirlUI_QuestObjectives_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(questObjectivesEnabled, "TOPLEFT", questObjectivesGroup, "TOPLEFT", 5, -10)
-    questObjectivesEnabled:SetChecked(SwirlUIDB.uiSettings.questObjectives.enabled)
-
-    local questObjectivesRemoveGraphics = AF.CreateCheckButton(questObjectivesGroup, "Remove Graphics", function(checked)
-        SwirlUIDB.uiSettings.questObjectives.removeGraphics = checked
-        AF.Fire("SwirlUI_QuestObjectives_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(questObjectivesRemoveGraphics, "LEFT", questObjectivesEnabled, "RIGHT", 75, 0)
-    questObjectivesRemoveGraphics:SetChecked(SwirlUIDB.uiSettings.questObjectives.removeGraphics)
-
-    local questObjectivesFontSize = AF.CreateSlider(questObjectivesGroup, "Font Size", 200, 8, 24, 1, false, true)
-    AF.SetPoint(questObjectivesFontSize, "TOPLEFT", questObjectivesEnabled, "BOTTOMLEFT", 0, -25)
-    questObjectivesFontSize:SetValue(SwirlUIDB.uiSettings.questObjectives.fontSize)
-    questObjectivesFontSize:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.questObjectives.fontSize = value
-        AF.Fire("SwirlUI_QuestObjectives_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    return questObjectivesGroup
-end
-
 local function CreateMouseClickGroup(scrollContent, previousGroup, borderedFrameWidth)
     local mouseClickGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 58, "background2", "black")
     mouseClickGroup:SetLabel("Mouse Click")
@@ -323,8 +289,7 @@ local function CreateOptionsTab()
     local chatBubblesGroup = CreateChatBubblesGroup(scrollFrame.scrollContent, uiScaleGroup, borderedFrameWidth)
     local uiErrorsGroup = CreateUIErrorsGroup(scrollFrame.scrollContent, chatBubblesGroup, borderedFrameWidth)
     local actionStatusGroup = CreateActionStatusGroup(scrollFrame.scrollContent, uiErrorsGroup, borderedFrameWidth)
-    local questObjectivesGroup = CreateQuestObjectivesGroup(scrollFrame.scrollContent, actionStatusGroup, borderedFrameWidth)
-    local mouseClickGroup = CreateMouseClickGroup(scrollFrame.scrollContent, questObjectivesGroup, borderedFrameWidth)
+    local mouseClickGroup = CreateMouseClickGroup(scrollFrame.scrollContent, actionStatusGroup, borderedFrameWidth)
     local aurasGroup = CreateAurasGroup(scrollFrame.scrollContent, mouseClickGroup, borderedFrameWidth)
 
     scrollFrame:SetContentHeight(1005)
