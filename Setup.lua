@@ -213,11 +213,7 @@ local function SetupDB()
         chatBubbles = { enabled = true, fontSize = 8 },
         uiErrors = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
-        questObjectives = { enabled = true, fontSize = 12, removeGraphics = true },
-        chat = { disableChatShadows = true },
         mouseClick = { extraActionButton = true, lfgListFrame = true },
-        skinAuras = { enabled = true, width = 32, height = 32, fontSize = 12 },
-        tooltip = { enabled = true, attachToCursor = true },
     }
 
     if not SwirlUIDB.uiSettings then

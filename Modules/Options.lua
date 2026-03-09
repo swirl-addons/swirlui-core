@@ -235,7 +235,7 @@ local function CreateOptionsTab()
     local actionStatusGroup = CreateActionStatusGroup(scrollFrame.scrollContent, uiErrorsGroup, borderedFrameWidth)
     local mouseClickGroup = CreateMouseClickGroup(scrollFrame.scrollContent, actionStatusGroup, borderedFrameWidth)
 
-    scrollFrame:SetContentHeight(1005)
+    scrollFrame:SetContentHeight(600)
 end
 
 local function ShowTab(callback, tab)
