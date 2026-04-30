@@ -9,6 +9,7 @@
 ## SavedVariables: SwirlUIDB
 ## Dependencies: SharedMedia_SwirlUI, AbstractFramework
 
+## X-Curse-Project-ID: 1529868
 ## X-Wago-ID: jK8XP0Ky
 
 ## Category: User Interface
