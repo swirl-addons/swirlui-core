@@ -23,7 +23,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     sliderBG:SetHeight(8)
     sliderBG:SetPoint("TOPLEFT",  row, "TOPLEFT",  sliderLeftOff, -22)
     sliderBG:SetPoint("TOPRIGHT", row, "TOPRIGHT", -18, -22)
-    SetBackdrop(sliderBG, theme.bg.dark, theme.border.color)
+    SetBackdrop(sliderBG, theme.bg.med, theme.border.color)
     sliderBG:EnableMouse(false)
 
     local slider = CreateFrame("Slider", nil, row, "BackdropTemplate")
@@ -47,7 +47,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
 
     local thumbFrameBG = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     thumbFrameBG:SetSize(19, 12)
-    SetBackdrop(thumbFrameBG, theme.bg.light, CreateColor(0, 0, 0, 0))
+    SetBackdrop(thumbFrameBG, theme.accentDim, CreateColor(0, 0, 0, 0))
 
     local thumbFrame = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     thumbFrame:SetSize(19, 12)
