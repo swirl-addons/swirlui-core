@@ -27,7 +27,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     local toggle = CreateFrame("Frame", nil, row, "BackdropTemplate")
     toggle:SetSize(TOGGLE_W, TOGGLE_H)
     toggle:SetPoint("TOPLEFT", row, "TOPLEFT", 0, -14)
-    SetBackdrop(toggle, theme.bg.med, theme.border)
+    SetBackdrop(toggle, theme.bg.med, theme.border.color)
 
     local knob = CreateFrame("Frame", nil, toggle, "BackdropTemplate")
     knob:SetSize(KNOB, KNOB)
@@ -156,7 +156,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     kbAnim:SetDuration(0.15)
     local kbFrom = {}
     local kbTo   = {}
-    local kbR, kbG, kbB = theme.border.r, theme.border.g, theme.border.b
+    local kbR, kbG, kbB = theme.border.color.r, theme.border.color.g, theme.border.color.b
 
     kbAG:SetScript("OnUpdate", function(ag)
         local p = ag:GetProgress() or 0

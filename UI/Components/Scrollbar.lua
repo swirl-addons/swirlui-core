@@ -10,7 +10,7 @@ function C:ApplyScrollbar(scrollFrame, scrollChild, parent)
     track:SetWidth(sbW)
     track:SetPoint("TOPRIGHT",    parent, "TOPRIGHT",    0, 0)
     track:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 0, 0)
-    SetBackdrop(track, CreateColor(0.08, 0.08, 0.08, 0.6), theme.border)
+    SetBackdrop(track, CreateColor(0.08, 0.08, 0.08, 0.6), theme.border.color)
 
     local thumb = CreateFrame("Frame", nil, track, "BackdropTemplate")
     thumb:SetWidth(sbW - 2)

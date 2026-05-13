@@ -54,9 +54,9 @@ function SUI.Components.ShowConfirm(text, onConfirm, onCancel)
     if not confirm then BuildConfirm() end
 
     local theme = N.T()
-    N.SetBackdrop(confirm, theme.bg.dark, theme.border)
-    N.SetBackdrop(confirm.okBtn, theme.bg.medium, theme.border)
-    N.SetBackdrop(confirm.cancelBtn, theme.bg.medium, theme.border)
+    N.SetBackdrop(confirm, theme.bg.dark, theme.border.color)
+    N.SetBackdrop(confirm.okBtn, theme.bg.medium, theme.border.color)
+    N.SetBackdrop(confirm.cancelBtn, theme.bg.medium, theme.border.color)
     N.ApplyAccent(confirm)
     local s = theme.success
     confirm.okLabel:SetTextColor(s.r, s.g, s.b, 1)

@@ -6,7 +6,7 @@ function C:CreateCard(parent, title)
     local theme = T()
 
     local card = CreateFrame("Frame", nil, parent, "BackdropTemplate")
-    SetBackdrop(card, theme.bg.light, theme.border)
+    SetBackdrop(card, theme.bg.light, theme.border.color)
     card.contentHeight = 0
     card._lastWidget   = nil
 
@@ -17,7 +17,7 @@ function C:CreateCard(parent, title)
         hdr:SetHeight(headerH)
         hdr:SetPoint("TOPLEFT",  card, "TOPLEFT",  0, 0)
         hdr:SetPoint("TOPRIGHT", card, "TOPRIGHT", 0, 0)
-        SetBackdrop(hdr, theme.bg.med, theme.border)
+        SetBackdrop(hdr, theme.bg.med, theme.border.color)
 
         local titleFS = hdr:CreateFontString(nil, "OVERLAY")
         titleFS:SetPoint("LEFT", hdr, "LEFT", theme.padding.med, 0)

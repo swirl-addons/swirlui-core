@@ -12,7 +12,7 @@ function C:CreateButton(parent, labelText, config)
 
     local btn = CreateFrame("Button", nil, parent, "BackdropTemplate")
     btn:SetSize(width, height)
-    SetBackdrop(btn, theme.bg.med, theme.border)
+    SetBackdrop(btn, theme.bg.med, theme.border.color)
 
     local animGroup = btn:CreateAnimationGroup()
     local anim      = animGroup:CreateAnimation("Animation")

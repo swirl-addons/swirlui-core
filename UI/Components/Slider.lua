@@ -23,7 +23,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     sliderBG:SetHeight(8)
     sliderBG:SetPoint("TOPLEFT",  row, "TOPLEFT",  sliderLeftOff, -22)
     sliderBG:SetPoint("TOPRIGHT", row, "TOPRIGHT", -18, -22)
-    SetBackdrop(sliderBG, theme.bg.dark, theme.border)
+    SetBackdrop(sliderBG, theme.bg.dark, theme.border.color)
     sliderBG:EnableMouse(false)
 
     local slider = CreateFrame("Slider", nil, row, "BackdropTemplate")
@@ -161,14 +161,14 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     local valueContainer = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     valueContainer:SetSize(theme.toggleWidth, 24)
     valueContainer:SetPoint("RIGHT", sliderBG, "LEFT", -20, 0)
-    SetBackdrop(valueContainer, theme.bg.med, theme.border)
+    SetBackdrop(valueContainer, theme.bg.med, theme.border.color)
 
     local ebAG   = valueContainer:CreateAnimationGroup()
     local ebAnim = ebAG:CreateAnimation("Animation")
     ebAnim:SetDuration(0.18)
     local ebFrom = {}
     local ebTo   = {}
-    local ebR, ebG, ebB = theme.border.r, theme.border.g, theme.border.b
+    local ebR, ebG, ebB = theme.border.color.r, theme.border.color.g, theme.border.color.b
 
     local function AnimateEditBorder(toAccent)
         ebAG:Stop()

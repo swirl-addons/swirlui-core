@@ -19,7 +19,7 @@ function C.SetBackdrop(frame, bg, border)
     frame:SetBackdrop({
         bgFile   = "Interface\\Buttons\\WHITE8X8",
         edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = theme.borderSize,
+        edgeSize = theme.border.size,
     })
     if bg then frame:SetBackdropColor(bg.r, bg.g, bg.b, bg.a) end
     if border then frame:SetBackdropBorderColor(border.r, border.g, border.b, border.a) end
