@@ -4,10 +4,10 @@
 ## Notes: Custom configs made for |cff02fd98Swirl|rUI
 ## Version: @project-version@
 ## Author: Swirl
-## IconTexture: Interface\AddOns\SwirlUI\media\icon.png
+## IconTexture: Interface\AddOns\SwirlUI\Media\Logo.png
 ## Group: SwirlUI
 ## SavedVariables: SwirlUIDB
-## Dependencies: SharedMedia_SwirlUI, AbstractFramework
+## Dependencies: SharedMedia_SwirlUI
 
 ## X-Curse-Project-ID: 1529868
 ## X-Wago-ID: jK8XP0Ky
@@ -26,7 +26,19 @@
 
 Libs/Init.xml
 
+UI/Theme.lua
 Constants.lua
+UI/Init.lua
+UI/Util.lua
+UI/Components/Button.lua
+UI/Components/Toggle.lua
+UI/Components/Card.lua
+UI/Components/Slider.lua
+UI/Components/Scrollbar.lua
+UI/Components/Tabs.lua
+UI/Components/Notification/Init.lua
+UI/Components/Notification/Toast.lua
+UI/Components/Notification/Confirm.lua
 Utils.lua
 Strings.lua
 ImportExport.lua
