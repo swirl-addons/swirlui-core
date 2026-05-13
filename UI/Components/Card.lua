@@ -20,7 +20,7 @@ function C:CreateCard(parent, title)
         SetBackdrop(hdr, theme.bg.med, theme.border)
 
         local titleFS = hdr:CreateFontString(nil, "OVERLAY")
-        titleFS:SetPoint("LEFT", hdr, "LEFT", theme.paddingMedium, 0)
+        titleFS:SetPoint("LEFT", hdr, "LEFT", theme.padding.med, 0)
         ApplyFont(titleFS, "large")
         titleFS:SetText(title)
         titleFS:SetTextColor(theme.accent.r, theme.accent.g, theme.accent.b, 1)
@@ -32,14 +32,14 @@ function C:CreateCard(parent, title)
 
     function card:AddWidget(widget, widgetHeight, topPad)
         local theme2 = T()
-        local pad    = topPad or theme2.paddingSmall
+        local pad    = topPad or theme2.padding.small
         local yOff   = -(self.innerTop + self.contentHeight + pad)
         widget:SetParent(self)
         widget:ClearAllPoints()
-        widget:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.paddingMedium, yOff)
-        widget:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.paddingMedium, yOff)
+        widget:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.padding.med, yOff)
+        widget:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.padding.med, yOff)
         self.contentHeight = self.contentHeight + (widgetHeight or widget:GetHeight() or 20) + pad
-        self:SetHeight(self.innerTop + self.contentHeight + theme2.paddingMedium)
+        self:SetHeight(self.innerTop + self.contentHeight + theme2.padding.med)
         self._lastWidget = widget
     end
 
@@ -47,12 +47,12 @@ function C:CreateCard(parent, title)
         local theme2 = T()
         local sep = self:CreateTexture(nil, "ARTWORK")
         sep:SetHeight(1)
-        local yOff = -(self.innerTop + self.contentHeight + theme2.paddingSmall)
-        sep:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.paddingMedium, yOff)
-        sep:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.paddingMedium, yOff)
+        local yOff = -(self.innerTop + self.contentHeight + theme2.padding.small)
+        sep:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.padding.med, yOff)
+        sep:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.padding.med, yOff)
         sep:SetColorTexture(1, 1, 1, 0.08)
-        self.contentHeight = self.contentHeight + 1 + theme2.paddingSmall
-        self:SetHeight(self.innerTop + self.contentHeight + theme2.paddingMedium)
+        self.contentHeight = self.contentHeight + 1 + theme2.padding.small
+        self:SetHeight(self.innerTop + self.contentHeight + theme2.padding.med)
     end
 
     function card:AddLabel(text, color)
@@ -64,16 +64,16 @@ function C:CreateCard(parent, title)
         fs:SetJustifyH("LEFT")
         fs:SetWordWrap(true)
         fs:SetText(text or "")
-        local yOff = -(self.innerTop + self.contentHeight + theme2.paddingSmall)
-        fs:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.paddingMedium, yOff)
-        fs:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.paddingMedium, yOff)
+        local yOff = -(self.innerTop + self.contentHeight + theme2.padding.small)
+        fs:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.padding.med, yOff)
+        fs:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.padding.med, yOff)
         local h = math.max(14, fs:GetStringHeight())
-        self.contentHeight = self.contentHeight + h + theme2.paddingSmall
-        self:SetHeight(self.innerTop + self.contentHeight + theme2.paddingMedium)
+        self.contentHeight = self.contentHeight + h + theme2.padding.small
+        self:SetHeight(self.innerTop + self.contentHeight + theme2.padding.med)
         return fs
     end
 
-    card:SetHeight(headerH + theme.paddingMedium)
+    card:SetHeight(headerH + theme.padding.med)
     return card
 end
 

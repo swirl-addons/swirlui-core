@@ -4,7 +4,7 @@ local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
 
 function C.CreateVerticalTabs(parent, tabs)
     local theme  = T()
-    local stripW = theme.sidebarWidth
+    local stripW = theme.tabsWidth
 
     local strip = CreateFrame("Frame", nil, parent, "BackdropTemplate")
     strip:SetPoint("TOPLEFT",    parent, "TOPLEFT",    0, 0)

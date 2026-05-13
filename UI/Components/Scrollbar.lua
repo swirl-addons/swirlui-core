@@ -127,14 +127,14 @@ function C:CreateTabScroller(tabFrame)
     track:HookScript("OnHide", function() scrollbarVisible = false; UpdateScrollChildWidth() end)
 
     function scrollChild:PlaceCard(card, yOffset)
-        card:SetPoint("TOPLEFT", self, "TOPLEFT",  theme.paddingSmall, -yOffset)
-        card:SetPoint("RIGHT",   self, "RIGHT",   -theme.paddingSmall,  0)
+        card:SetPoint("TOPLEFT", self, "TOPLEFT",  theme.padding.small, -yOffset)
+        card:SetPoint("RIGHT",   self, "RIGHT",   -theme.padding.small,  0)
         return yOffset
     end
 
     function scrollChild:Commit(yOffset)
         C_Timer.After(0, function()
-            self:SetHeight(yOffset + theme.paddingSmall)
+            self:SetHeight(yOffset + theme.padding.small)
             UpdateScrollBarVisibility()
         end)
     end
