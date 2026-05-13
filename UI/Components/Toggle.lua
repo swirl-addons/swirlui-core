@@ -174,7 +174,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     local function AnimateKnobBorder(toAccent)
         kbAG:Stop()
         kbFrom.r, kbFrom.g, kbFrom.b = kbR, kbG, kbB
-        local c = toAccent and T().accent or T().border
+        local c = toAccent and T().accent or T().border.color
         kbTo.r, kbTo.g, kbTo.b = c.r, c.g, c.b
         kbAG:Play()
     end
