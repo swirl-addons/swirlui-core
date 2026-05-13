@@ -7,9 +7,9 @@ function C.T() return SUI.Theme end
 function C.ApplyFont(fs, size)
     local font = C.T().font
     local sz = size == "small" and font.size.small
-           or  size == "large" and (font.size.normal + 2)
-           or  font.size.normal
-    fs:SetFont(font.ttf, sz, "OUTLINE")
+           or size == "large" and (font.size.normal + 2)
+           or font.size.normal
+    fs:SetFont(font.path, sz, "OUTLINE")
     fs:SetShadowOffset(0, 0)
     fs:SetShadowColor(0, 0, 0, 0)
 end
@@ -21,7 +21,7 @@ function C.SetBackdrop(frame, bg, border)
         edgeFile = "Interface\\Buttons\\WHITE8X8",
         edgeSize = theme.borderSize,
     })
-    if bg     then frame:SetBackdropColor(bg.r, bg.g, bg.b, bg.a) end
+    if bg then frame:SetBackdropColor(bg.r, bg.g, bg.b, bg.a) end
     if border then frame:SetBackdropBorderColor(border.r, border.g, border.b, border.a) end
 end
 
