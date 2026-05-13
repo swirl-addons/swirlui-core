@@ -3,18 +3,18 @@ local C  = SUI.Components
 
 local function T() return SUI.Theme end
 
-local profilesTab
+local generalTab
 local scrollChild, genCard
 
-local function CreateProfilesTab()
+local function CreateGeneralTab()
     local theme = T()
-    local parent = SUI.frames.profilesContent
+    local parent = SUI.frames.generalContent
 
-    profilesTab = CreateFrame("Frame", "SwirlUI_ProfilesTab", parent)
-    profilesTab:SetAllPoints(parent)
-    SUI.frames.profilesTab = profilesTab
+    generalTab = CreateFrame("Frame", "SwirlUI_GeneralTab", parent)
+    generalTab:SetAllPoints(parent)
+    SUI.frames.generalTab = generalTab
 
-    scrollChild = C:CreateTabScroller(profilesTab)
+    scrollChild = C:CreateTabScroller(generalTab)
 
     local y = theme.padding.small
 
@@ -33,9 +33,9 @@ local function CreateProfilesTab()
 
 end
 
-function SUI.BuildProfilesTab()
-    if not profilesTab then
-        CreateProfilesTab()
+function SUI.BuildGeneralTab()
+    if not generalTab then
+        CreateGeneralTab()
     end
-    profilesTab:Show()
+    generalTab:Show()
 end

@@ -17,11 +17,11 @@ end
 
 local tabs = {
     {
-        key = "Profiles",
-        title = "Profiles",
+        key = "General",
+        title = "General",
         onSelect = function(content)
-            SUI.frames.profilesContent = content
-            if SUI.BuildProfilesTab then SUI.BuildProfilesTab() end
+            SUI.frames.generalContent = content
+            if SUI.BuildGeneralTab then SUI.BuildGeneralTab() end
         end,
     },
     {
@@ -170,7 +170,7 @@ function SUI.Show()
 
     SUI.frames.optionsFrame = win
     SUI.frames.tabController = ctrl
-    SUI.frames.profilesContent = ctrl.GetContent("Profiles")
+    SUI.frames.generalContent = ctrl.GetContent("General")
     SUI.frames.userInterfaceContent = ctrl.GetContent("User Interface")
 
     win:EnableKeyboard(true)
