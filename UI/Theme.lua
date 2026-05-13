@@ -3,7 +3,7 @@ local _, SUI = ...
 local T = {
     bg = {
         dark = CreateColorFromHexString("EB060808"),
-        med = CreateColorFromHexString("F2171717"),
+        med = CreateColorFromHexString("991A1A19"),
         light = CreateColorFromHexString("EB080808"),
         hover = CreateColorFromHexString("CC2E2E2E"),
     },
