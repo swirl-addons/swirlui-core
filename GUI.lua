@@ -93,12 +93,20 @@ local function BuildFooter(win, text)
     footLine:SetColorTexture(1, 1, 1, 0.08)
 
     if text then
-        local fs = footer:CreateFontString(nil, "OVERLAY")
-        ApplyFont(fs, "small")
-        fs:SetText(text)
+        local eb = CreateFrame("EditBox", nil, footer)
+        eb:SetAutoFocus(false)
+        eb:SetFontObject("GameFontNormal")
+        ApplyFont(eb, "small")
         local color = theme.text.muted
-        fs:SetTextColor(color.r, color.g, color.b, 1)
-        fs:SetPoint("RIGHT", footer, "RIGHT", -theme.padding.med, 0)
+        eb:SetTextColor(color.r, color.g, color.b, 1)
+        eb:SetText(text)
+        eb:SetWidth(160)
+        eb:SetHeight(theme.footerHeight)
+        eb:SetPoint("RIGHT", footer, "RIGHT", -theme.padding.med, 0)
+        eb:SetJustifyH("RIGHT")
+        eb:SetScript("OnEscapePressed", function() eb:ClearFocus() end)
+        eb:SetScript("OnEditFocusGained", function() eb:HighlightText() end)
+        eb:SetScript("OnEditFocusLost", function() eb:HighlightText(0, 0) end)
     end
 
     return footer
