@@ -6,7 +6,7 @@ function C.T() return SUI.Theme end
 
 function C.ApplyFont(fs, size)
     local font = C.T().font
-    local sz = size == "small" and font.size.small
+    local sz = size == "small" and font.size.normal
            or size == "large" and (font.size.normal + 2)
            or font.size.normal
     fs:SetFont(font.path, sz, "OUTLINE")
