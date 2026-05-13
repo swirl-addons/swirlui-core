@@ -1,0 +1,104 @@
+local _, SUI = ...
+local C = SUI.Components
+local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
+
+function C:CreateCard(parent, title)
+    local theme = T()
+
+    local card = CreateFrame("Frame", nil, parent, "BackdropTemplate")
+    SetBackdrop(card, theme.bgLight, theme.border)
+    card.contentHeight = 0
+    card._lastWidget   = nil
+
+    local headerH = 0
+    if title and title ~= "" then
+        headerH = 30
+        local hdr = CreateFrame("Frame", nil, card, "BackdropTemplate")
+        hdr:SetHeight(headerH)
+        hdr:SetPoint("TOPLEFT",  card, "TOPLEFT",  0, 0)
+        hdr:SetPoint("TOPRIGHT", card, "TOPRIGHT", 0, 0)
+        SetBackdrop(hdr, theme.bgMedium, theme.border)
+
+        local titleFS = hdr:CreateFontString(nil, "OVERLAY")
+        titleFS:SetPoint("LEFT", hdr, "LEFT", theme.paddingMedium, 0)
+        ApplyFont(titleFS, "large")
+        titleFS:SetText(title)
+        titleFS:SetTextColor(theme.accent[1], theme.accent[2], theme.accent[3], 1)
+        card.header    = hdr
+        card.titleText = titleFS
+    end
+
+    card.innerTop = headerH
+
+    function card:AddWidget(widget, widgetHeight, topPad)
+        local theme2 = T()
+        local pad    = topPad or theme2.paddingSmall
+        local yOff   = -(self.innerTop + self.contentHeight + pad)
+        widget:SetParent(self)
+        widget:ClearAllPoints()
+        widget:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.paddingMedium, yOff)
+        widget:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.paddingMedium, yOff)
+        self.contentHeight = self.contentHeight + (widgetHeight or widget:GetHeight() or 20) + pad
+        self:SetHeight(self.innerTop + self.contentHeight + theme2.paddingMedium)
+        self._lastWidget = widget
+    end
+
+    function card:AddSeparator()
+        local theme2 = T()
+        local sep = self:CreateTexture(nil, "ARTWORK")
+        sep:SetHeight(1)
+        local yOff = -(self.innerTop + self.contentHeight + theme2.paddingSmall)
+        sep:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.paddingMedium, yOff)
+        sep:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.paddingMedium, yOff)
+        sep:SetColorTexture(1, 1, 1, 0.08)
+        self.contentHeight = self.contentHeight + 1 + theme2.paddingSmall
+        self:SetHeight(self.innerTop + self.contentHeight + theme2.paddingMedium)
+    end
+
+    function card:AddLabel(text, color)
+        local theme2 = T()
+        local fs = self:CreateFontString(nil, "OVERLAY")
+        ApplyFont(fs, "normal")
+        local c = color or theme2.textSecondary
+        fs:SetTextColor(c[1], c[2], c[3], c[4] or 1)
+        fs:SetJustifyH("LEFT")
+        fs:SetWordWrap(true)
+        fs:SetText(text or "")
+        local yOff = -(self.innerTop + self.contentHeight + theme2.paddingSmall)
+        fs:SetPoint("TOPLEFT",  self, "TOPLEFT",  theme2.paddingMedium, yOff)
+        fs:SetPoint("TOPRIGHT", self, "TOPRIGHT", -theme2.paddingMedium, yOff)
+        local h = math.max(14, fs:GetStringHeight())
+        self.contentHeight = self.contentHeight + h + theme2.paddingSmall
+        self:SetHeight(self.innerTop + self.contentHeight + theme2.paddingMedium)
+        return fs
+    end
+
+    card:SetHeight(headerH + theme.paddingMedium)
+    return card
+end
+
+function C:CreateDivider(parent, text)
+    local theme = T()
+    local container = CreateFrame("Frame", nil, parent)
+    container:SetHeight(22)
+
+    local lbl = container:CreateFontString(nil, "OVERLAY")
+    ApplyFont(lbl, "normal")
+    lbl:SetText(text or "")
+    lbl:SetTextColor(theme.textMuted[1], theme.textMuted[2], theme.textMuted[3], 1)
+    lbl:SetPoint("CENTER", container, "CENTER", 0, 0)
+
+    local lineL = container:CreateTexture(nil, "ARTWORK")
+    lineL:SetColorTexture(1, 1, 1, 0.10)
+    lineL:SetHeight(1)
+    lineL:SetPoint("LEFT",  container, "LEFT",  0,  0)
+    lineL:SetPoint("RIGHT", lbl,       "LEFT", -6,  0)
+
+    local lineR = container:CreateTexture(nil, "ARTWORK")
+    lineR:SetColorTexture(1, 1, 1, 0.10)
+    lineR:SetHeight(1)
+    lineR:SetPoint("LEFT",  lbl,       "RIGHT",  6, 0)
+    lineR:SetPoint("RIGHT", container, "RIGHT",  0, 0)
+
+    return container
+end
