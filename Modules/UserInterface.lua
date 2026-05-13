@@ -3,7 +3,7 @@ local C = SUI.Components
 
 local function T() return SUI.Theme end
 
-local optionsTab
+local userInterfaceTab
 
 local function BuildUIScaleCard(scrollChild, y)
     local theme = T()
@@ -122,15 +122,15 @@ local function BuildMouseClickCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
-local function CreateOptionsTab()
+local function CreateUserInterfaceTab()
     local theme  = T()
-    local parent = SUI.frames.optionsContent
+    local parent = SUI.frames.userInterfaceContent
 
-    optionsTab = CreateFrame("Frame", "SwirlUI_OptionsTab", parent)
-    optionsTab:SetAllPoints(parent)
-    SUI.frames.optionsTab = optionsTab
+    userInterfaceTab = CreateFrame("Frame", "SwirlUI_UserInterfaceTab", parent)
+    userInterfaceTab:SetAllPoints(parent)
+    SUI.frames.userInterfaceTab = userInterfaceTab
 
-    local scrollChild = C:CreateTabScroller(optionsTab)
+    local scrollChild = C:CreateTabScroller(userInterfaceTab)
 
     local y = theme.padding.small
     y = BuildUIScaleCard(scrollChild, y)
@@ -142,9 +142,9 @@ local function CreateOptionsTab()
     scrollChild:Commit(y)
 end
 
-function SUI.BuildOptionsTab()
-    if not optionsTab then
-        CreateOptionsTab()
+function SUI.BuildUserInterfaceTab()
+    if not userInterfaceTab then
+        CreateUserInterfaceTab()
     end
-    optionsTab:Show()
+    userInterfaceTab:Show()
 end

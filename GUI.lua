@@ -15,6 +15,25 @@ function SUI.AddTab(key, title, onSelect)
     table.insert(registeredTabs, { key = key, title = title, onSelect = onSelect })
 end
 
+local tabs = {
+    {
+        key = "Profiles",
+        title = "Profiles",
+        onSelect = function(content)
+            SUI.frames.profilesContent = content
+            if SUI.BuildProfilesTab then SUI.BuildProfilesTab() end
+        end,
+    },
+    {
+        key = "User Interface",
+        title = "User Interface",
+        onSelect = function(content)
+            SUI.frames.userInterfaceContent = content
+            if SUI.BuildUserInterfaceTab then SUI.BuildUserInterfaceTab() end
+        end,
+    },
+}
+
 local function BuildHeader(win, titleText, onClose)
     local theme = T()
     local header = CreateFrame("Frame", nil, win, "BackdropTemplate")
@@ -135,24 +154,6 @@ function SUI.Show()
 
     local footer = BuildFooter(win, "discord.gg/ZU5rhXtbNd")
 
-    local tabs = {
-        {
-            key = "Profiles",
-            title = "Profiles",
-            onSelect = function(content)
-                SUI.frames.profilesContent = content
-                if SUI.BuildProfilesTab then SUI.BuildProfilesTab() end
-            end,
-        },
-        {
-            key = "Options",
-            title = "Options",
-            onSelect = function(content)
-                SUI.frames.optionsContent = content
-                if SUI.BuildOptionsTab then SUI.BuildOptionsTab() end
-            end,
-        },
-    }
     for _, tab in ipairs(registeredTabs) do
         table.insert(tabs, tab)
     end
@@ -162,7 +163,7 @@ function SUI.Show()
     SUI.frames.optionsFrame = win
     SUI.frames.tabController = ctrl
     SUI.frames.profilesContent = ctrl.GetContent("Profiles")
-    SUI.frames.optionsContent = ctrl.GetContent("Options")
+    SUI.frames.userInterfaceContent = ctrl.GetContent("User Interface")
 
     win:EnableKeyboard(true)
     win:SetPropagateKeyboardInput(true)

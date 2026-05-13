@@ -45,6 +45,6 @@ ImportExport.lua
 Setup.lua
 GUI.lua
 Modules/Profiles.lua
-Modules/Options.lua
+Modules/UserInterface.lua
 
 SwirlUI.lua
