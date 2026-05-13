@@ -1,5 +1,6 @@
 local _, SUI = ...
-local N = SUI.Components.Notification
+local C = SUI.Components
+local N = C.Notification
 
 local CONFIRM_W = 220
 local CONFIRM_H = 72
@@ -15,7 +16,7 @@ local function BuildConfirm()
     msg:SetPoint("TOPLEFT", confirm, "TOPLEFT", 14, -12)
     msg:SetPoint("TOPRIGHT", confirm, "TOPRIGHT", -10, -12)
     msg:SetJustifyH("LEFT")
-    N.ApplyFont(msg, "small")
+    C.ApplyFont(msg, "small")
     confirm.msg = msg
 
     local okBtn = CreateFrame("Button", nil, confirm, "BackdropTemplate")
@@ -29,8 +30,8 @@ local function BuildConfirm()
     local cancelLabel = cancelBtn:CreateFontString(nil, "OVERLAY")
     okLabel:SetPoint("CENTER", okBtn, "CENTER")
     cancelLabel:SetPoint("CENTER", cancelBtn, "CENTER")
-    N.ApplyFont(okLabel, "small")
-    N.ApplyFont(cancelLabel, "small")
+    C.ApplyFont(okLabel, "small")
+    C.ApplyFont(cancelLabel, "small")
     okLabel:SetText("Confirm")
     cancelLabel:SetText("Cancel")
     confirm.okBtn = okBtn
@@ -39,24 +40,24 @@ local function BuildConfirm()
     confirm.cancelLabel = cancelLabel
 
     okBtn:SetScript("OnEnter", function()
-        local s = N.T().success
+        local s = C.T().success
         okBtn:SetBackdropBorderColor(s.r, s.g, s.b, 1)
     end)
     okBtn:SetScript("OnLeave", function() okBtn:SetBackdropBorderColor(0, 0, 0, 1) end)
     cancelBtn:SetScript("OnEnter", function()
-        local e = N.T().error
+        local e = C.T().error
         cancelBtn:SetBackdropBorderColor(e.r, e.g, e.b, 1)
     end)
     cancelBtn:SetScript("OnLeave", function() cancelBtn:SetBackdropBorderColor(0, 0, 0, 1) end)
 end
 
-function SUI.Components.ShowConfirm(text, onConfirm, onCancel)
+function C.ShowConfirm(text, onConfirm, onCancel)
     if not confirm then BuildConfirm() end
 
-    local theme = N.T()
-    N.SetBackdrop(confirm, theme.bg.dark, theme.border.color)
-    N.SetBackdrop(confirm.okBtn, theme.bg.med, theme.border.color)
-    N.SetBackdrop(confirm.cancelBtn, theme.bg.med, theme.border.color)
+    local theme = C.T()
+    C.SetBackdrop(confirm, theme.bg.dark, theme.border.color)
+    C.SetBackdrop(confirm.okBtn, theme.bg.med, theme.border.color)
+    C.SetBackdrop(confirm.cancelBtn, theme.bg.med, theme.border.color)
     N.ApplyAccent(confirm)
     local s = theme.success
     confirm.okLabel:SetTextColor(s.r, s.g, s.b, 1)

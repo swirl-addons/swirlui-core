@@ -1,5 +1,6 @@
 local _, SUI = ...
-local N = SUI.Components.Notification
+local C = SUI.Components
+local N = C.Notification
 
 local POPUP_W = 260
 local POPUP_H = 52
@@ -17,15 +18,16 @@ local function ShowNext()
         msg:SetPoint("RIGHT", popup, "RIGHT", -10, 0)
         msg:SetJustifyH("LEFT")
         msg:SetJustifyV("MIDDLE")
-        N.ApplyFont(msg, "small")
+        C.ApplyFont(msg, "small")
         popup.msg = msg
     end
     active = true
 
     local item = table.remove(queue, 1)
     local dur = item.duration or 2
+    local theme = C.T()
 
-    N.SetBackdrop(popup, N.T().bg.dark, N.T().border)
+    C.SetBackdrop(popup, theme.bg.dark, theme.border.color)
     N.ApplyAccent(popup)
     popup.msg:SetText(item.text)
     popup:ClearAllPoints()
@@ -40,7 +42,7 @@ local function ShowNext()
     end)
 end
 
-function SUI.Components.ShowToast(text, duration)
+function C.ShowToast(text, duration)
     table.insert(queue, { text = text, duration = duration })
     ShowNext()
 end

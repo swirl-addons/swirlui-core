@@ -1,6 +1,5 @@
 local _, SUI = ...
 local C = SUI.Components
-local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
 
 local FADE_TIME = 0.3
 C.Notification = {}
@@ -57,10 +56,6 @@ function N.FadeOut(f, cb)
 end
 
 function N.ApplyAccent(f)
-    local ac = T().accent
+    local ac = C.T().accent
     f.accent:SetColorTexture(ac.r, ac.g, ac.b, 1)
 end
-
-N.ApplyFont = ApplyFont
-N.SetBackdrop = SetBackdrop
-N.T = T
