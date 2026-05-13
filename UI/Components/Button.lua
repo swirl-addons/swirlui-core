@@ -12,7 +12,7 @@ function C:CreateButton(parent, labelText, config)
 
     local btn = CreateFrame("Button", nil, parent, "BackdropTemplate")
     btn:SetSize(width, height)
-    SetBackdrop(btn, theme.bgMedium, theme.border)
+    SetBackdrop(btn, theme.bg.med, theme.border)
 
     local animGroup = btn:CreateAnimationGroup()
     local anim      = animGroup:CreateAnimation("Animation")
@@ -34,13 +34,13 @@ function C:CreateButton(parent, labelText, config)
     local label = btn:CreateFontString(nil, "OVERLAY")
     ApplyFont(label, "normal")
     label:SetText(labelText or "")
-    label:SetTextColor(theme.accent[1], theme.accent[2], theme.accent[3], 1)
+    label:SetTextColor(theme.accent.r, theme.accent.g, theme.accent.b, 1)
     label:SetPoint("CENTER", btn, "CENTER", 0, 0)
     btn.label = label
 
     btn:SetScript("OnEnter", function()
         local ac = T().accent
-        toColor.r, toColor.g, toColor.b = ac[1], ac[2], ac[3]
+        toColor.r, toColor.g, toColor.b = ac.r, ac.g, ac.b
         AnimateBorderColor(btn, animGroup, fromColor, toColor)
         if tooltip then
             GameTooltip:SetOwner(btn, "ANCHOR_TOP")
@@ -50,7 +50,7 @@ function C:CreateButton(parent, labelText, config)
     end)
     btn:SetScript("OnLeave", function()
         local bd = T().border
-        toColor.r, toColor.g, toColor.b = bd[1], bd[2], bd[3]
+        toColor.r, toColor.g, toColor.b = bd.r, bd.g, bd.b
         AnimateBorderColor(btn, animGroup, fromColor, toColor)
         GameTooltip:Hide()
     end)

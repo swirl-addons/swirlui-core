@@ -6,7 +6,7 @@ function C:CreateCard(parent, title)
     local theme = T()
 
     local card = CreateFrame("Frame", nil, parent, "BackdropTemplate")
-    SetBackdrop(card, theme.bgLight, theme.border)
+    SetBackdrop(card, theme.bg.light, theme.border)
     card.contentHeight = 0
     card._lastWidget   = nil
 
@@ -17,13 +17,13 @@ function C:CreateCard(parent, title)
         hdr:SetHeight(headerH)
         hdr:SetPoint("TOPLEFT",  card, "TOPLEFT",  0, 0)
         hdr:SetPoint("TOPRIGHT", card, "TOPRIGHT", 0, 0)
-        SetBackdrop(hdr, theme.bgMedium, theme.border)
+        SetBackdrop(hdr, theme.bg.med, theme.border)
 
         local titleFS = hdr:CreateFontString(nil, "OVERLAY")
         titleFS:SetPoint("LEFT", hdr, "LEFT", theme.paddingMedium, 0)
         ApplyFont(titleFS, "large")
         titleFS:SetText(title)
-        titleFS:SetTextColor(theme.accent[1], theme.accent[2], theme.accent[3], 1)
+        titleFS:SetTextColor(theme.accent.r, theme.accent.g, theme.accent.b, 1)
         card.header    = hdr
         card.titleText = titleFS
     end
@@ -59,8 +59,8 @@ function C:CreateCard(parent, title)
         local theme2 = T()
         local fs = self:CreateFontString(nil, "OVERLAY")
         ApplyFont(fs, "normal")
-        local c = color or theme2.textSecondary
-        fs:SetTextColor(c[1], c[2], c[3], c[4] or 1)
+        local c = color or theme2.text.secondary
+        fs:SetTextColor(c.r, c.g, c.b, c.a or 1)
         fs:SetJustifyH("LEFT")
         fs:SetWordWrap(true)
         fs:SetText(text or "")
@@ -85,7 +85,8 @@ function C:CreateDivider(parent, text)
     local lbl = container:CreateFontString(nil, "OVERLAY")
     ApplyFont(lbl, "normal")
     lbl:SetText(text or "")
-    lbl:SetTextColor(theme.textMuted[1], theme.textMuted[2], theme.textMuted[3], 1)
+    local color = theme.text.muted
+    lbl:SetTextColor(color.r, color.g, color.b, 1)
     lbl:SetPoint("CENTER", container, "CENTER", 0, 0)
 
     local lineL = container:CreateTexture(nil, "ARTWORK")

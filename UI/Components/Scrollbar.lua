@@ -10,11 +10,11 @@ function C:ApplyScrollbar(scrollFrame, scrollChild, parent)
     track:SetWidth(sbW)
     track:SetPoint("TOPRIGHT",    parent, "TOPRIGHT",    0, 0)
     track:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 0, 0)
-    SetBackdrop(track, { 0.08, 0.08, 0.08, 0.6 }, theme.border)
+    SetBackdrop(track, CreateColor(0.08, 0.08, 0.08, 0.6), theme.border)
 
     local thumb = CreateFrame("Frame", nil, track, "BackdropTemplate")
     thumb:SetWidth(sbW - 2)
-    SetBackdrop(thumb, { theme.accent[1], theme.accent[2], theme.accent[3], 0.75 }, { 0, 0, 0, 0 })
+    SetBackdrop(thumb, CreateColor(theme.accent.r, theme.accent.g, theme.accent.b, 0.75), CreateColor(0, 0, 0, 0))
     thumb:SetPoint("RIGHT", track, "RIGHT", -1, 0)
 
     local thumbTop = thumb:CreateTexture(nil, "OVERLAY")

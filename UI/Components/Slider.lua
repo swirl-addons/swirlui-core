@@ -4,7 +4,7 @@ local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
 
 function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     local theme          = T()
-    local stepperTexture = "Interface\\AddOns\\SUI\\Media\\Chevron.png"
+    local stepperTexture = "Interface\\AddOns\\SwirlUI\\Media\\Chevron.png"
 
     local row = CreateFrame("Frame", nil, parent)
     row:SetHeight(36)
@@ -14,7 +14,8 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     label:SetJustifyH("LEFT")
     ApplyFont(label, "small")
     label:SetText(labelText or "")
-    label:SetTextColor(theme.textSecondary[1], theme.textSecondary[2], theme.textSecondary[3], 1)
+    local color = theme.text.secondary
+    label:SetTextColor(color.r, color.g, color.b, 1)
     row.label = label
 
     local sliderLeftOff = theme.toggleWidth + 20  -- value box + left stepper
@@ -22,7 +23,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     sliderBG:SetHeight(8)
     sliderBG:SetPoint("TOPLEFT",  row, "TOPLEFT",  sliderLeftOff, -22)
     sliderBG:SetPoint("TOPRIGHT", row, "TOPRIGHT", -18, -22)
-    SetBackdrop(sliderBG, theme.bgDark, theme.border)
+    SetBackdrop(sliderBG, theme.bg.dark, theme.border)
     sliderBG:EnableMouse(false)
 
     local slider = CreateFrame("Slider", nil, row, "BackdropTemplate")
@@ -35,24 +36,24 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     slider:SetObeyStepOnDrag(true)
     slider:SetValue(getVal())
     slider:SetHitRectInsets(-9, -9, -5, -5)
-    SetBackdrop(slider, { 0, 0, 0, 0 }, { 0, 0, 0, 0 })
+    SetBackdrop(slider, CreateColor(0, 0, 0, 0), CreateColor(0, 0, 0, 0))
 
     local fill = slider:CreateTexture(nil, "ARTWORK")
     fill:SetHeight(6)
     fill:SetPoint("LEFT", sliderBG, "LEFT", 0, 0)
-    fill:SetColorTexture(theme.accent[1], theme.accent[2], theme.accent[3], 1)
+    fill:SetColorTexture(theme.accent.r, theme.accent.g, theme.accent.b, 1)
     fill:SetTexelSnappingBias(0)
     fill:SetSnapToPixelGrid(false)
 
     local thumbFrameBG = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     thumbFrameBG:SetSize(19, 12)
-    SetBackdrop(thumbFrameBG, theme.bgLight, { 0, 0, 0, 0 })
+    SetBackdrop(thumbFrameBG, theme.bg.light, CreateColor(0, 0, 0, 0))
 
     local thumbFrame = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     thumbFrame:SetSize(19, 12)
     SetBackdrop(thumbFrame,
-        { theme.textSecondary[1], theme.textSecondary[2], theme.textSecondary[3], 0.6 },
-        { 0, 0, 0, 1 })
+        CreateColor(color.r, color.g, color.b, 0.6),
+        CreateColor(0, 0, 0, 1))
 
     local thumb = slider:CreateTexture(nil, "ARTWORK")
     thumb:SetColorTexture(0, 0, 0, 0)
@@ -72,19 +73,19 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     thumbAnim:SetDuration(0.18)
     local tFrom = {}
     local tTo   = {}
-    local tR, tG, tB, tA = theme.textSecondary[1], theme.textSecondary[2], theme.textSecondary[3], 0.6
+    local tR, tG, tB, tA = color.r, color.g, color.b, 0.6
 
     local function AnimateThumb(toHover, toDrag)
         thumbAG:Stop()
         tFrom.r, tFrom.g, tFrom.b, tFrom.a = tR, tG, tB, tA
         local ac = T().accent
-        local ts = T().textSecondary
+        local ts = T().text.secondary
         if toDrag then
-            tTo.r, tTo.g, tTo.b, tTo.a = ac[1], ac[2], ac[3], 1
+            tTo.r, tTo.g, tTo.b, tTo.a = ac.r, ac.g, ac.b, 1
         elseif toHover then
-            tTo.r, tTo.g, tTo.b, tTo.a = ts[1], ts[2], ts[3], 1
+            tTo.r, tTo.g, tTo.b, tTo.a = ts.r, ts.g, ts.b, 1
         else
-            tTo.r, tTo.g, tTo.b, tTo.a = ts[1], ts[2], ts[3], 0.6
+            tTo.r, tTo.g, tTo.b, tTo.a = ts.r, ts.g, ts.b, 0.6
         end
         thumbAG:Play()
     end
@@ -110,7 +111,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
 
         local icon = btn:CreateTexture(nil, "ARTWORK")
         icon:SetAllPoints()
-        icon:SetVertexColor(theme.textSecondary[1], theme.textSecondary[2], theme.textSecondary[3], 1)
+        icon:SetVertexColor(color.r, color.g, color.b, 1)
         icon:SetRotation(math.rad(rotation))
         icon:SetTexelSnappingBias(0)
         icon:SetSnapToPixelGrid(false)
@@ -121,13 +122,13 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
         sAnim:SetDuration(0.18)
         local sFrom = {}
         local sTo   = {}
-        local sR, sG, sB = theme.textSecondary[1], theme.textSecondary[2], theme.textSecondary[3]
+        local sR, sG, sB = color.r, color.g, color.b
 
         local function AnimateStepper(toAccent)
             sAG:Stop()
             sFrom.r, sFrom.g, sFrom.b = sR, sG, sB
-            local c = toAccent and T().accent or T().textSecondary
-            sTo.r, sTo.g, sTo.b = c[1], c[2], c[3]
+            local c = toAccent and T().accent or T().text.secondary
+            sTo.r, sTo.g, sTo.b = c.r, c.g, c.b
             sAG:Play()
         end
 
@@ -160,20 +161,20 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     local valueContainer = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     valueContainer:SetSize(theme.toggleWidth, 24)
     valueContainer:SetPoint("RIGHT", sliderBG, "LEFT", -20, 0)
-    SetBackdrop(valueContainer, theme.bgMedium, theme.border)
+    SetBackdrop(valueContainer, theme.bg.med, theme.border)
 
     local ebAG   = valueContainer:CreateAnimationGroup()
     local ebAnim = ebAG:CreateAnimation("Animation")
     ebAnim:SetDuration(0.18)
     local ebFrom = {}
     local ebTo   = {}
-    local ebR, ebG, ebB = theme.border[1], theme.border[2], theme.border[3]
+    local ebR, ebG, ebB = theme.border.r, theme.border.g, theme.border.b
 
     local function AnimateEditBorder(toAccent)
         ebAG:Stop()
         ebFrom.r, ebFrom.g, ebFrom.b = ebR, ebG, ebB
         local c = toAccent and T().accent or T().border
-        ebTo.r, ebTo.g, ebTo.b = c[1], c[2], c[3]
+        ebTo.r, ebTo.g, ebTo.b = c.r, c.g, c.b
         ebAG:Play()
     end
 
@@ -194,7 +195,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     valueEdit:SetPoint("TOPLEFT",     valueContainer, "TOPLEFT",      2, -2)
     valueEdit:SetPoint("BOTTOMRIGHT", valueContainer, "BOTTOMRIGHT", -2,  2)
     ApplyFont(valueEdit, "small")
-    valueEdit:SetTextColor(theme.accent[1], theme.accent[2], theme.accent[3], 1)
+    valueEdit:SetTextColor(theme.accent.r, theme.accent.g, theme.accent.b, 1)
     valueEdit:SetJustifyH("CENTER")
     valueEdit:SetAutoFocus(false)
     valueEdit:SetText(tostring(getVal()))
@@ -243,8 +244,8 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     valueEdit:SetScript("OnEditFocusGained", function(eb)
         ebAG:Stop()
         local ac = T().accent
-        valueContainer:SetBackdropBorderColor(ac[1], ac[2], ac[3], 1)
-        ebR, ebG, ebB = ac[1], ac[2], ac[3]
+        valueContainer:SetBackdropBorderColor(ac.r, ac.g, ac.b, 1)
+        ebR, ebG, ebB = ac.r, ac.g, ac.b
         eb:HighlightText()
     end)
     valueEdit:SetScript("OnEnter", function(eb) if not eb:HasFocus() then AnimateEditBorder(true)  end end)
@@ -255,8 +256,8 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
         if btn == "LeftButton" then
             thumbAG:Stop()
             local ac = T().accent
-            thumbFrame:SetBackdropColor(ac[1], ac[2], ac[3], 1)
-            tR, tG, tB, tA = ac[1], ac[2], ac[3], 1
+            thumbFrame:SetBackdropColor(ac.r, ac.g, ac.b, 1)
+            tR, tG, tB, tA = ac.r, ac.g, ac.b, 1
             curDrag = true
         end
     end)

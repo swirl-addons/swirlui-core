@@ -58,7 +58,7 @@ end
 
 function N.ApplyAccent(f)
     local ac = T().accent
-    f.accent:SetColorTexture(ac[1], ac[2], ac[3], 1)
+    f.accent:SetColorTexture(ac.r, ac.g, ac.b, 1)
 end
 
 N.ApplyFont = ApplyFont

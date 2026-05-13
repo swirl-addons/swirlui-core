@@ -20,13 +20,14 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     lbl:SetJustifyH("LEFT")
     ApplyFont(lbl, "small")
     lbl:SetText(labelText or "")
-    lbl:SetTextColor(theme.textSecondary[1], theme.textSecondary[2], theme.textSecondary[3], 1)
+    local color = theme.text.secondary
+    lbl:SetTextColor(color.r, color.g, color.b, 1)
     row.label = lbl
 
     local toggle = CreateFrame("Frame", nil, row, "BackdropTemplate")
     toggle:SetSize(TOGGLE_W, TOGGLE_H)
     toggle:SetPoint("TOPLEFT", row, "TOPLEFT", 0, -14)
-    SetBackdrop(toggle, theme.bgMedium, theme.border)
+    SetBackdrop(toggle, theme.bg.med, theme.border)
 
     local knob = CreateFrame("Frame", nil, toggle, "BackdropTemplate")
     knob:SetSize(KNOB, KNOB)
@@ -42,7 +43,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
 
     local knobTex = knob:CreateTexture(nil, "ARTWORK")
     knobTex:SetAllPoints()
-    knobTex:SetColorTexture(theme.accent[1], theme.accent[2], theme.accent[3], 0.8)
+    knobTex:SetColorTexture(theme.accent.r, theme.accent.g, theme.accent.b, 0.8)
 
     local function SetKnobBorderColor(r, g, b)
         knob:SetBackdropBorderColor(r, g, b, 1)
@@ -59,7 +60,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     colorAnim:SetDuration(ANIM_DUR)
     local cFrom = {}
     local cTo   = {}
-    local knobR, knobG, knobB, knobA = theme.accent[1], theme.accent[2], theme.accent[3], 0.6
+    local knobR, knobG, knobB, knobA = theme.accent.r, theme.accent.g, theme.accent.b, 0.6
 
     colorGroup:SetScript("OnUpdate", function(ag)
         local p = ag:GetProgress() or 0
@@ -85,25 +86,25 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
 
     local function UpdateColors(toState, instant)
         local ac  = T().accent
-        local bgD = T().bgDark
-        local bgA = { ac[1] * 0.5, ac[2] * 0.5, ac[3] * 0.5 }
+        local bgD = T().bg.dark
+        local bgA = CreateColor(ac.r * 0.5, ac.g * 0.5, ac.b * 0.5, 1)
         if instant then
             if toState then
-                toggle:SetBackdropColor(bgA[1], bgA[2], bgA[3], 1)
-                knobTex:SetColorTexture(ac[1], ac[2], ac[3], 0.8)
-                knobR, knobG, knobB, knobA = ac[1], ac[2], ac[3], 0.8
+                toggle:SetBackdropColor(bgA.r, bgA.g, bgA.b, 1)
+                knobTex:SetColorTexture(ac.r, ac.g, ac.b, 0.8)
+                knobR, knobG, knobB, knobA = ac.r, ac.g, ac.b, 0.8
             else
-                toggle:SetBackdropColor(bgD[1], bgD[2], bgD[3], 1)
-                knobTex:SetColorTexture(ac[1], ac[2], ac[3], 0.6)
-                knobR, knobG, knobB, knobA = ac[1], ac[2], ac[3], 0.6
+                toggle:SetBackdropColor(bgD.r, bgD.g, bgD.b, 1)
+                knobTex:SetColorTexture(ac.r, ac.g, ac.b, 0.6)
+                knobR, knobG, knobB, knobA = ac.r, ac.g, ac.b, 0.6
             end
             return
         end
         colorGroup:Stop()
         cFrom.bgR, cFrom.bgG, cFrom.bgB = toggle:GetBackdropColor()
         cFrom.kr, cFrom.kg, cFrom.kb, cFrom.ka = knobR, knobG, knobB, knobA
-        cTo.bgR, cTo.bgG, cTo.bgB = toState and bgA[1] or bgD[1], toState and bgA[2] or bgD[2], toState and bgA[3] or bgD[3]
-        cTo.kr, cTo.kg, cTo.kb = ac[1], ac[2], ac[3]
+        cTo.bgR, cTo.bgG, cTo.bgB = toState and bgA.r or bgD.r, toState and bgA.g or bgD.g, toState and bgA.b or bgD.b
+        cTo.kr, cTo.kg, cTo.kb = ac.r, ac.g, ac.b
         cTo.ka = toState and 0.8 or 0.6
         colorGroup:Play()
     end
@@ -155,7 +156,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     kbAnim:SetDuration(0.15)
     local kbFrom = {}
     local kbTo   = {}
-    local kbR, kbG, kbB = theme.border[1], theme.border[2], theme.border[3]
+    local kbR, kbG, kbB = theme.border.r, theme.border.g, theme.border.b
 
     kbAG:SetScript("OnUpdate", function(ag)
         local p = ag:GetProgress() or 0
@@ -174,22 +175,22 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
         kbAG:Stop()
         kbFrom.r, kbFrom.g, kbFrom.b = kbR, kbG, kbB
         local c = toAccent and T().accent or T().border
-        kbTo.r, kbTo.g, kbTo.b = c[1], c[2], c[3]
+        kbTo.r, kbTo.g, kbTo.b = c.r, c.g, c.b
         kbAG:Play()
     end
 
     clickBtn:SetScript("OnEnter", function()
         local ac = T().accent
         local a = state and 0.8 or 0.6
-        knobTex:SetColorTexture(ac[1] * 1.2, ac[2] * 1.2, ac[3] * 1.2, a)
-        knobR, knobG, knobB, knobA = ac[1] * 1.2, ac[2] * 1.2, ac[3] * 1.2, a
+        knobTex:SetColorTexture(ac.r * 1.2, ac.g * 1.2, ac.b * 1.2, a)
+        knobR, knobG, knobB, knobA = ac.r * 1.2, ac.g * 1.2, ac.b * 1.2, a
         AnimateKnobBorder(true)
     end)
     clickBtn:SetScript("OnLeave", function()
         local ac = T().accent
         local a = state and 0.8 or 0.4
-        knobTex:SetColorTexture(ac[1], ac[2], ac[3], a)
-        knobR, knobG, knobB, knobA = ac[1], ac[2], ac[3], a
+        knobTex:SetColorTexture(ac.r, ac.g, ac.b, a)
+        knobR, knobG, knobB, knobA = ac.r, ac.g, ac.b, a
         AnimateKnobBorder(false)
     end)
 

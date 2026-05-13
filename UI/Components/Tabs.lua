@@ -10,7 +10,7 @@ function C.CreateVerticalTabs(parent, tabs)
     strip:SetPoint("TOPLEFT",    parent, "TOPLEFT",    0, 0)
     strip:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", 0, 0)
     strip:SetWidth(stripW)
-    SetBackdrop(strip, theme.bgMedium, theme.border)
+    SetBackdrop(strip, theme.bg.med, theme.border)
 
     local function MakeLine(w, h, r, g, b, a)
         local t = parent:CreateTexture(nil, "OVERLAY")
@@ -34,7 +34,7 @@ function C.CreateVerticalTabs(parent, tabs)
     local contentHost = CreateFrame("Frame", nil, parent, "BackdropTemplate")
     contentHost:SetPoint("TOPLEFT",     strip,  "TOPRIGHT",    1, 0)
     contentHost:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 0, 0)
-    SetBackdrop(contentHost, { 0, 0, 0, 0 }, theme.border)
+    SetBackdrop(contentHost, CreateColor(0, 0, 0, 0), theme.border)
 
     local chTop = MakeLine(nil, 1, 1, 1, 1, 0.12)
     chTop:SetPoint("TOPLEFT",  contentHost, "TOPLEFT",  0, 0)
@@ -52,12 +52,13 @@ function C.CreateVerticalTabs(parent, tabs)
         local btn = data.btn
         if isSelected then
             btn.indicator:Show()
-            btn.bg:SetColorTexture(T().accent[1] * 0.15, T().accent[2] * 0.15, T().accent[3] * 0.15, 1)
+            btn.bg:SetColorTexture(T().accent.r * 0.15, T().accent.g * 0.15, T().accent.b * 0.15, 1)
             btn.label:SetTextColor(1, 1, 1, 1)
         else
             btn.indicator:Hide()
             btn.bg:SetColorTexture(0, 0, 0, 0)
-            btn.label:SetTextColor(T().textSecondary[1], T().textSecondary[2], T().textSecondary[3], 1)
+            local color = T().text.secondary
+            btn.label:SetTextColor(color.r, color.g, color.b, 1)
         end
     end
 
@@ -93,7 +94,7 @@ function C.CreateVerticalTabs(parent, tabs)
         end
         prev = btn
 
-        SetBackdrop(btn, { 0, 0, 0, 0 }, { 0, 0, 0, 0 })
+        SetBackdrop(btn, CreateColor(0, 0, 0, 0), CreateColor(0, 0, 0, 0))
 
         local bg = btn:CreateTexture(nil, "ARTWORK")
         bg:SetAllPoints()
@@ -104,7 +105,7 @@ function C.CreateVerticalTabs(parent, tabs)
         indicator:SetWidth(3)
         indicator:SetPoint("TOPLEFT",    btn, "TOPLEFT",    0, 0)
         indicator:SetPoint("BOTTOMLEFT", btn, "BOTTOMLEFT", 0, 0)
-        indicator:SetColorTexture(T().accent[1], T().accent[2], T().accent[3], 1)
+        indicator:SetColorTexture(T().accent.r, T().accent.g, T().accent.b, 1)
         indicator:Hide()
         btn.indicator = indicator
 
@@ -112,7 +113,8 @@ function C.CreateVerticalTabs(parent, tabs)
         ApplyFont(lbl, "normal")
         lbl:SetText(def.title or def.key)
         lbl:SetPoint("LEFT", btn, "LEFT", 10, 0)
-        lbl:SetTextColor(T().textSecondary[1], T().textSecondary[2], T().textSecondary[3], 1)
+        local color = T().text.secondary
+        lbl:SetTextColor(color.r, color.g, color.b, 1)
         btn.label = lbl
 
         btn:SetScript("OnEnter", function()

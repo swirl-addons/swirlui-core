@@ -39,13 +39,13 @@ local function BuildConfirm()
     confirm.cancelLabel = cancelLabel
 
     okBtn:SetScript("OnEnter", function()
-        local s = N.T().friendly
-        okBtn:SetBackdropBorderColor(s[1], s[2], s[3], 1)
+        local s = N.T().success
+        okBtn:SetBackdropBorderColor(s.r, s.g, s.b, 1)
     end)
     okBtn:SetScript("OnLeave", function() okBtn:SetBackdropBorderColor(0, 0, 0, 1) end)
     cancelBtn:SetScript("OnEnter", function()
-        local e = N.T().hostile
-        cancelBtn:SetBackdropBorderColor(e[1], e[2], e[3], 1)
+        local e = N.T().error
+        cancelBtn:SetBackdropBorderColor(e.r, e.g, e.b, 1)
     end)
     cancelBtn:SetScript("OnLeave", function() cancelBtn:SetBackdropBorderColor(0, 0, 0, 1) end)
 end
@@ -54,14 +54,14 @@ function SUI.Components.ShowConfirm(text, onConfirm, onCancel)
     if not confirm then BuildConfirm() end
 
     local theme = N.T()
-    N.SetBackdrop(confirm, theme.bgDark, theme.border)
-    N.SetBackdrop(confirm.okBtn, theme.bgMedium, theme.border)
-    N.SetBackdrop(confirm.cancelBtn, theme.bgMedium, theme.border)
+    N.SetBackdrop(confirm, theme.bg.dark, theme.border)
+    N.SetBackdrop(confirm.okBtn, theme.bg.medium, theme.border)
+    N.SetBackdrop(confirm.cancelBtn, theme.bg.medium, theme.border)
     N.ApplyAccent(confirm)
-    local s = theme.friendly
-    confirm.okLabel:SetTextColor(s[1], s[2], s[3], 1)
-    local e = theme.hostile
-    confirm.cancelLabel:SetTextColor(e[1], e[2], e[3], 1)
+    local s = theme.success
+    confirm.okLabel:SetTextColor(s.r, s.g, s.b, 1)
+    local e = theme.error
+    confirm.cancelLabel:SetTextColor(e.r, e.g, e.b, 1)
     confirm.msg:SetText(text)
 
     confirm.okBtn:SetScript("OnClick", function()

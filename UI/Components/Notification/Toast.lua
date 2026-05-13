@@ -25,7 +25,7 @@ local function ShowNext()
     local item = table.remove(queue, 1)
     local dur = item.duration or 2
 
-    N.SetBackdrop(popup, N.T().bgDark, N.T().border)
+    N.SetBackdrop(popup, N.T().bg.dark, N.T().border)
     N.ApplyAccent(popup)
     popup.msg:SetText(item.text)
     popup:ClearAllPoints()
