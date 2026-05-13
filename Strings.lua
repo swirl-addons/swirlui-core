@@ -1,9 +1,9 @@
-local _, SwirlUI = ...
+local _, SUI = ...
 
-SwirlUI.ImportProfiles = {
+SUI.ImportProfiles = {
 }
 
-SwirlUI.ApplyAddons = {
+SUI.ApplyAddons = {
     {
         name = "BigWigs",
         database = BigWigs3DB,

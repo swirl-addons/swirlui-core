@@ -1,4 +1,4 @@
-local _, SwirlUI = ...
+local _, SUI = ...
 
 local PLAYER_CLASS = select(2, UnitClass("player"))
 local PLAYER_CLASS_COLOR = RAID_CLASS_COLORS[PLAYER_CLASS]
@@ -38,7 +38,7 @@ local function BugSackMinimapButton()
     SwirlUIBugSackButton:SetSize(22, 22)
     SwirlUIBugSackButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 1.5, 1.5)
     SwirlUIBugSackButton.Text = SwirlUIBugSackButton:CreateFontString(nil, "OVERLAY")
-    SwirlUIBugSackButton.Text:SetFont(SwirlUI.Font, 16, "OUTLINE")
+    SwirlUIBugSackButton.Text:SetFont(SUI.Theme.font.path, 16, "OUTLINE")
     SwirlUIBugSackButton.Text:SetPoint("CENTER", SwirlUIBugSackButton, "CENTER", 0, 0)
     SwirlUIBugSackButton.Text:SetTextColor(1, 1, 1)
     SwirlUIBugSackButton.Text:SetText("|cFF49AF4C0|r")
@@ -87,13 +87,13 @@ end
 
 local function ApplyChatBubbleSettings()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.chatBubbles.enabled then
-        ChatBubbleFont:SetFont(SwirlUI.Font, SwirlUIDB.uiSettings.chatBubbles.fontSize, "OUTLINE")
+        ChatBubbleFont:SetFont(SUI.Theme.font.path, SwirlUIDB.uiSettings.chatBubbles.fontSize, "OUTLINE")
     end
 end
 
 local function ApplyUIErrorsSettings()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.uiErrors.enabled then
-        UIErrorsFrame:SetFont(SwirlUI.Font, SwirlUIDB.uiSettings.uiErrors.fontSize, "OUTLINE")
+        UIErrorsFrame:SetFont(SUI.Theme.font.path, SwirlUIDB.uiSettings.uiErrors.fontSize, "OUTLINE")
         UIErrorsFrame:SetShadowOffset(0, 0)
         UIErrorsFrame:ClearAllPoints()
         UIErrorsFrame:SetPoint("CENTER", UIParent, "CENTER", SwirlUIDB.uiSettings.uiErrors.offsetX, SwirlUIDB.uiSettings.uiErrors.offsetY)
@@ -102,27 +102,10 @@ end
 
 local function ApplyActionStatusSettings()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.actionStatus.enabled then
-        ActionStatus.Text:SetFont(SwirlUI.Font, SwirlUIDB.uiSettings.actionStatus.fontSize, "OUTLINE")
+        ActionStatus.Text:SetFont(SUI.Theme.font.path, SwirlUIDB.uiSettings.actionStatus.fontSize, "OUTLINE")
         ActionStatus.Text:SetShadowOffset(0, 0)
         ActionStatus.Text:ClearAllPoints()
         ActionStatus.Text:SetPoint("CENTER", UIParent, "CENTER", SwirlUIDB.uiSettings.actionStatus.offsetX, SwirlUIDB.uiSettings.actionStatus.offsetY)
-    end
-end
-
-local function MoveAbstractFrameworkPopups()
-    if AFConfig then
-        if SwirlUIDB.uiSettings.moveAFPopups then
-            AFConfig["popups"] = {
-                ["orientation"] = "top_to_bottom",
-                ["position"] = {
-                    "TOP",
-                    0,
-                    -100,
-                },
-            }
-        else
-            AFConfig["popups"] = nil
-        end
     end
 end
 
@@ -150,28 +133,17 @@ local function ApplyUISettings()
     ApplyMouseClickSettings()
 end
 
-local function RegisterUISettingsCallbacks()
-    local AF = _G.AbstractFramework
-    if not AF then return end
-
-    AF.RegisterCallback("SwirlUI_ChatBubbles_Changed", ApplyChatBubbleSettings, "medium", "ChatBubblesUpdate")
-    AF.RegisterCallback("SwirlUI_UIErrors_Changed", ApplyUIErrorsSettings, "medium", "UIErrorsUpdate")
-    AF.RegisterCallback("SwirlUI_ActionStatus_Changed", ApplyActionStatusSettings, "medium", "ActionStatusUpdate")
-    AF.RegisterCallback("SwirlUI_AbstractFrameworkPopups_Changed", MoveAbstractFrameworkPopups, "medium", "AbstractFrameworkPopupsUpdate")
-    AF.RegisterCallback("SwirlUI_MouseClick_Changed", ApplyMouseClickSettings, "medium", "MouseClickUpdate")
-end
-
 local function CheckProfileVersionUpdates()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.silence then return end
-    for _, profile in ipairs(SwirlUI.ImportProfiles) do
+    for _, profile in ipairs(SUI.ImportProfiles) do
         if (profile.string or profile.data) and IsAddOnLoaded(profile.name) then
             local currentVersion = profile.version
             local storedVersion = SwirlUIDB.profileVersions[profile.name]
             
             if storedVersion and storedVersion ~= currentVersion then
-                local addonColor = SwirlUI.ApplyColor(profile.name, profile.color)
-                local versionColor = SwirlUI.ApplyColor(currentVersion, SwirlUI.Friendly)
-                SwirlUI.Utils:Print(string.format("Update available for %s to v%s", addonColor, versionColor))
+                local addonColor = WrapTextInColorCode(profile.name, profile.color)
+                local versionColor = WrapTextInColorCode(currentVersion, SUI.Friendly)
+                SUI.Utils:Print(string.format("Update available for %s to v%s", addonColor, versionColor))
             end
         end
     end
@@ -180,18 +152,18 @@ end
 local function CheckProfilesReady()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.silence then return end
     local readyProfiles = {}
-    
-    for _, profile in ipairs(SwirlUI.Utils:GetAllProfiles()) do
-        local status = SwirlUI.Utils:GetAddonStatus(profile)
-        if status == SwirlUI.STATUS.READY then
+
+    for _, profile in ipairs(SUI.Utils:GetAllProfiles()) do
+        local status = SUI.Utils:GetAddonStatus(profile)
+        if status == SUI.STATUS.READY then
             table.insert(readyProfiles, profile)
         end
     end
-    
+
     if #readyProfiles > 0 then
         local readyCount = #readyProfiles
-        local readyColor = SwirlUI.ApplyColor(readyCount, SwirlUI.Neutral)
-        SwirlUI.Utils:Print(string.format("Profiles ready: %s", readyColor))
+        local readyColor = WrapTextInColorCode(string(readyCount), SUI.Theme.warning)
+        SUI.Utils:Print(string.format("Profiles ready: %s", readyColor))
     end
 end
 
@@ -209,7 +181,6 @@ local function SetupDB()
 
     local defaultUiSettings = {
         silence = false,
-        moveAFPopups = true,
         chatBubbles = { enabled = true, fontSize = 8 },
         uiErrors = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
@@ -233,16 +204,12 @@ local function SetupDB()
             SwirlUIDB.uiSettings[key] = defaultValue
         end
     end
-
-    -- setting default popup location instead of asking user
-    MoveAbstractFrameworkPopups()
 end
 
-function SwirlUI:Initialize()
+function SUI:Initialize()
     SetupDB()
 
     ApplyUISettings()
-    RegisterUISettingsCallbacks()
     AddOnSetups()
     MinimapData()
 
