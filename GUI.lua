@@ -9,6 +9,12 @@ local ApplyFont = C.ApplyFont
 
 SUI.frames = SUI.frames or {}
 
+local registeredTabs = {}
+
+function SUI.AddTab(key, title, onSelect)
+    table.insert(registeredTabs, { key = key, title = title, onSelect = onSelect })
+end
+
 local function BuildHeader(win, titleText, onClose)
     local theme = T()
     local header = CreateFrame("Frame", nil, win, "BackdropTemplate")
@@ -129,7 +135,7 @@ function SUI.Show()
 
     local footer = BuildFooter(win, "discord.gg/ZU5rhXtbNd")
 
-    local _, ctrl = BuildTabArea(win, header, footer, {
+    local tabs = {
         {
             key = "Profiles",
             title = "Profiles",
@@ -146,7 +152,12 @@ function SUI.Show()
                 if SUI.BuildOptionsTab then SUI.BuildOptionsTab() end
             end,
         },
-    })
+    }
+    for _, tab in ipairs(registeredTabs) do
+        table.insert(tabs, tab)
+    end
+
+    local _, ctrl = BuildTabArea(win, header, footer, tabs)
 
     SUI.frames.optionsFrame = win
     SUI.frames.tabController = ctrl
