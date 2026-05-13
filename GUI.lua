@@ -1,210 +1,273 @@
-local addonName, SwirlUI = ...
-local U = SwirlUI.Utils
-local AF = _G.AbstractFramework
+local addonName, SUI = ...
+local C = SUI.Components
 
-local _, UNIT_CLASS = UnitClass("player")
+SUI.InitTheme()
 
-AF.AddColor(SwirlUI.Hostile, SwirlUI.Hostile)
-AF.AddColor(SwirlUI.Friendly, SwirlUI.Friendly)
-AF.AddColor(SwirlUI.Neutral, SwirlUI.Neutral)
-AF.AddColor(SwirlUI.Orange, SwirlUI.Orange)
-AF.RegisterAddon(addonName)
-AF.SetAddonAccentColor(
-    addonName,
-    AF.GetColorHex(UNIT_CLASS),
-    {0.15, 0.15, 0.15, 1},
-    AF.GetColorHex(UNIT_CLASS, 0.7)
-)
--- AF.AddColor("accent", AF.GetColorHex(UNIT_CLASS))
--- AF.AddColor("accent_hover", AF.GetColorHex(UNIT_CLASS))
--- AF.AddButtonColor("accent_hover", {0.15, 0.15, 0.15, 1}, AF.GetColorTable("accent", 0.7))
-AF.AddColor("background", {0.024, 0.024, 0.031, 0.75})
-AF.AddColor("background2", {0.024, 0.024, 0.031, 0.3})
+local function T() return SUI.Theme end
+local SetBackdrop = C.SetBackdrop
+local ApplyFont = C.ApplyFont
 
--- override AF fonts with outlines
-AF.CreateFont(SwirlUI.Title, "AF_FONT_TITLE", SwirlUI.Font, SwirlUI.FontSize + 2, "OUTLINE", false, "white")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_NORMAL", SwirlUI.Font, SwirlUI.FontSize + 1, "OUTLINE", false, "white")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_CHAT", SwirlUI.Font, SwirlUI.FontSize + 1, "OUTLINE", false, "white")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_OUTLINE", SwirlUI.Font, SwirlUI.FontSize + 1, "OUTLINE", false, "accent")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_SMALL", SwirlUI.Font, SwirlUI.FontSize - 1, "OUTLINE", false, "white")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_CHINESE", SwirlUI.Font, SwirlUI.FontSize + 2, "OUTLINE", false, "white")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_TOOLTIP_HEADER", SwirlUI.Font, SwirlUI.FontSize + 2, "OUTLINE", false, "white")
-AF.CreateFont(SwirlUI.Title, "AF_FONT_TOOLTIP", SwirlUI.Font, SwirlUI.FontSize + 1, "OUTLINE", false, "white")
+SUI.frames = SUI.frames or {}
 
+local function BuildHeader(win, titleText, onClose)
+    local theme = T()
+    local header = CreateFrame("Frame", nil, win, "BackdropTemplate")
+    header:SetHeight(theme.headerHeight)
+    header:SetPoint("TOPLEFT", win, "TOPLEFT", 0, 0)
+    header:SetPoint("TOPRIGHT", win, "TOPRIGHT", 0, 0)
+    SetBackdrop(header, theme.bg.med, theme.border.color)
 
-SwirlUI.frames = SwirlUI.frames or {}
+    local hdrLine = win:CreateTexture(nil, "ARTWORK")
+    hdrLine:SetHeight(1)
+    hdrLine:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, 0)
+    hdrLine:SetPoint("TOPRIGHT", header, "BOTTOMRIGHT", 0, 0)
+    hdrLine:SetColorTexture(1, 1, 1, 0.12)
 
-local lastShownTab
-local profilesBtn, optionsBtn
+    local titleFS = header:CreateFontString(nil, "OVERLAY")
+    ApplyFont(titleFS, "large")
+    titleFS:SetText(titleText or "")
+    titleFS:SetPoint("LEFT", header, "LEFT", theme.padding.large, 0)
+    header.titleFS = titleFS
 
-local function CreateTabButtons(optionsFrame)
-    profilesBtn = AF.CreateButton(optionsFrame, "Profiles", addonName, 220, 21)
-    optionsBtn = AF.CreateButton(optionsFrame, "Options", addonName, 221, 21)
+    local closeBtn = CreateFrame("Button", nil, header)
+    closeBtn:SetSize(26, 26)
+    closeBtn:SetPoint("RIGHT", header, "RIGHT", -6, 0)
 
-    profilesBtn:SetFrameLevel(optionsFrame:GetFrameLevel() + 2)
-    optionsBtn:SetFrameLevel(optionsFrame:GetFrameLevel() + 2)
+    local closeLbl = closeBtn:CreateFontString(nil, "OVERLAY")
+    closeLbl:SetAllPoints()
+    closeLbl:SetJustifyH("CENTER")
+    closeLbl:SetJustifyV("MIDDLE")
+    closeLbl:SetFont(theme.font.path, theme.font.size.large + 6, "OUTLINE")
+    closeLbl:SetText("×")
+    closeLbl:SetTextColor(0.5, 0.5, 0.5, 1)
+    closeLbl:SetShadowColor(0, 0, 0, 0)
+    closeBtn:SetScript("OnEnter", function() closeLbl:SetTextColor(theme.error.r, theme.error.g, theme.error.b, 1) end)
+    closeBtn:SetScript("OnLeave", function() closeLbl:SetTextColor(0.5, 0.5, 0.5, 1) end)
+    closeBtn:SetScript("OnClick", onClose)
 
-    profilesBtn:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", 0, 0)
-    optionsBtn:SetPoint("LEFT", profilesBtn, "RIGHT", -1, 0)
+    header:EnableMouse(true)
+    header:RegisterForDrag("LeftButton")
+    header:SetScript("OnDragStart", function() win:StartMoving() end)
+    header:SetScript("OnDragStop", function() win:StopMovingOrSizing() end)
 
-    local function ShowTab(tab)
-        if lastShownTab ~= tab then
-            AF.Fire("ShowOptionsTab", tab.id)
-            lastShownTab = tab
-        end
-    end
-
-    AF.CreateButtonGroup({profilesBtn, optionsBtn}, ShowTab, function() end, function() end, function() end, function() end)
+    return header, closeBtn
 end
 
-function SwirlUI.ShowImportGUI_AF()
-    if _G.SWIRLUI_AF_FRAME then
-        _G.SWIRLUI_AF_FRAME:Show()
-        if lastShownTab then
-            AF.Fire("ShowOptionsTab", lastShownTab)
+local function BuildFooter(win, text)
+    local theme = T()
+    local footer = CreateFrame("Frame", nil, win, "BackdropTemplate")
+    footer:SetHeight(theme.footerHeight)
+    footer:SetPoint("BOTTOMLEFT", win, "BOTTOMLEFT", 0, 0)
+    footer:SetPoint("BOTTOMRIGHT", win, "BOTTOMRIGHT", 0, 0)
+    SetBackdrop(footer, theme.bg.med, theme.border.color)
+
+    local footLine = win:CreateTexture(nil, "ARTWORK")
+    footLine:SetHeight(1)
+    footLine:SetPoint("BOTTOMLEFT", footer, "TOPLEFT", 0, 0)
+    footLine:SetPoint("BOTTOMRIGHT", footer, "TOPRIGHT", 0, 0)
+    footLine:SetColorTexture(1, 1, 1, 0.08)
+
+    if text then
+        local fs = footer:CreateFontString(nil, "OVERLAY")
+        ApplyFont(fs, "small")
+        fs:SetText(text)
+        local color = theme.text.muted
+        fs:SetTextColor(color.r, color.g, color.b, 1)
+        fs:SetPoint("RIGHT", footer, "RIGHT", -theme.padding.med, 0)
+    end
+
+    return footer
+end
+
+local function BuildTabArea(win, header, footer, tabs)
+    local tabArea = CreateFrame("Frame", nil, win)
+    tabArea:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -1)
+    tabArea:SetPoint("BOTTOMRIGHT", footer, "TOPRIGHT", 0, 1)
+
+    local _, _, ctrl = C.CreateVerticalTabs(tabArea, tabs)
+    return tabArea, ctrl
+end
+
+function SUI.Show()
+    if _G.SWIRLUI_MAIN_FRAME then
+        _G.SWIRLUI_MAIN_FRAME:Show()
+        _G.SWIRLUI_MAIN_FRAME:Raise()
+        return
+    end
+
+    local theme = T()
+    local WIN_W = 680
+    local WIN_H = 520
+
+    local win = CreateFrame("Frame", "SWIRLUI_MAIN_FRAME", UIParent, "BackdropTemplate")
+    win:SetSize(WIN_W, WIN_H)
+    win:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    win:SetFrameStrata("HIGH")
+    win:SetToplevel(true)
+    win:SetClampedToScreen(true)
+    win:SetMovable(true)
+    win:EnableMouse(true)
+    SetBackdrop(win, theme.bg.dark, theme.border.color)
+
+    local header, closeBtn = BuildHeader(win, SUI.HeaderNoColon, function()
+        win:Hide()
+        if SUI.SettingsChanged then
+            SUI.SettingsChanged = false
+            SUI:ReloadDialog()
+        end
+    end)
+
+    local version = C_AddOns.GetAddOnMetadata(addonName, "Version") or ""
+    if version ~= "" then
+        local verFS = header:CreateFontString(nil, "OVERLAY")
+        ApplyFont(verFS, "small")
+        verFS:SetText("v" .. version)
+        local color = theme.text.muted
+        verFS:SetTextColor(color.r, color.g, color.b, 1)
+        verFS:SetPoint("LEFT", header.titleFS, "RIGHT", 6, 0)
+    end
+
+    local footer = BuildFooter(win, "discord.gg/ZU5rhXtbNd")
+
+    local _, ctrl = BuildTabArea(win, header, footer, {
+        {
+            key = "Profiles",
+            title = "Profiles",
+            onSelect = function(content)
+                SUI.frames.profilesContent = content
+                if SUI.BuildProfilesTab then SUI.BuildProfilesTab() end
+            end,
+        },
+        {
+            key = "Options",
+            title = "Options",
+            onSelect = function(content)
+                SUI.frames.optionsContent = content
+                if SUI.BuildOptionsTab then SUI.BuildOptionsTab() end
+            end,
+        },
+    })
+
+    SUI.frames.optionsFrame = win
+    SUI.frames.tabController = ctrl
+    SUI.frames.profilesContent = ctrl.GetContent("Profiles")
+    SUI.frames.optionsContent = ctrl.GetContent("Options")
+
+    win:EnableKeyboard(true)
+    win:SetPropagateKeyboardInput(true)
+    win:SetScript("OnKeyDown", function(self, key)
+        if key == "ESCAPE" and self:IsShown() then
+            self:SetPropagateKeyboardInput(false)
+            closeBtn:Click()
         else
-            profilesBtn:Click()
-        end
-        return
-    end
-
-    local frame = AF.CreateHeaderedFrame(AF.UIParent, "SWIRLUI_AF_FRAME",
-        SwirlUI.HeaderNoColon, 440, 475)
-    AF.SetPoint(frame, "CENTER", UIParent, "CENTER", 0, 0)
-    frame:SetTitleColor("white")
-    frame:SetFrameLevel(100)
-    frame:SetTitleJustify("CENTER")
-    
-    frame:SetScript("OnHide", function()
-        if SwirlUI.SettingsChanged then
-            SwirlUI.SettingsChanged = false
-            SwirlUI:ReloadDialog(frame)
+            self:SetPropagateKeyboardInput(true)
         end
     end)
 
-    _G["SwirlUI_AF_Frame"] = frame
-    table.insert(UISpecialFrames, "SwirlUI_AF_Frame")
-
-    SwirlUI.frames.optionsFrame = frame
-
-    local supportGroup = AF.CreateTitledPane(frame, "Support", 430, 65)
-    AF.SetPoint(supportGroup, "BOTTOMLEFT", frame, "BOTTOMLEFT", 5, 5)
-    supportGroup:SetFrameLevel(frame:GetFrameLevel() + 3)
-
-    local helpText = AF.CreateFontString(supportGroup, string.format("Join the discord for %s support", SwirlUI.HeaderNoColon), "white", "AF_FONT_NORMAL")
-    AF.SetPoint(helpText, "TOPLEFT", 0, -25)
-
-    local discordBox = AF.CreateEditBox(supportGroup, nil, 430, 20)
-    AF.SetPoint(discordBox, "TOPLEFT", 0, -45)
-    discordBox:SetText("https://discord.gg/ZU5rhXtbNd")
-    discordBox:SetNotUserChangable(true)
-    discordBox:SetCursorPosition(0)
-
-    CreateTabButtons(frame)
-
-    if not lastShownTab then
-        profilesBtn:Click()
-    end
-
-    frame:Show()
-    _G.SWIRLUI_AF_FRAME = frame
+    _G["SwirlUI_Main_Frame"] = win
+    table.insert(UISpecialFrames, "SwirlUI_Main_Frame")
+    win:Show()
+    _G.SWIRLUI_MAIN_FRAME = win
 end
 
-function SwirlUI.ShowExportGUI_AF()
-    if _G.SWIRLUI_AF_EXPORT_FRAME then
-        _G.SWIRLUI_AF_EXPORT_FRAME:Show()
+function SUI.ShowExport()
+    if _G.SWIRLUI_EXPORT_FRAME then
+        _G.SWIRLUI_EXPORT_FRAME:Show()
         return
     end
 
-    local buttonHeight = 24
+    local theme = T()
+    local btnH = 24
     local spacing = 5
+    local n = #SUI.ImportProfiles
+    local WIN_W = 320
+    local WIN_H = n * (btnH + spacing) + 60
 
-    local height = (#SwirlUI.ImportProfiles * buttonHeight) + ((#SwirlUI.ImportProfiles - 1) * spacing) + 35
+    local win = CreateFrame("Frame", "SWIRLUI_EXPORT_FRAME", UIParent, "BackdropTemplate")
+    win:SetSize(WIN_W, WIN_H)
+    win:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    win:SetFrameStrata("DIALOG")
+    win:SetToplevel(true)
+    win:SetMovable(true)
+    win:EnableMouse(true)
+    SetBackdrop(win, theme.bg.dark, theme.border.color)
 
-    local frame = AF.CreateHeaderedFrame(AF.UIParent, "SWIRLUI_AF_EXPORT_FRAME",
-        SwirlUI.HeaderNoColon .. " Export", 310, height)
-    AF.SetPoint(frame, "CENTER", UIParent, "CENTER", 0, 0)
-    frame:SetFrameLevel(100)
-    frame:SetTitleColor("white")
-    frame:SetTitleJustify("CENTER")
-    frame:SetScript("OnHide", function()
-        frame:Hide()
-    end)
-    _G["SwirlUI_AF_EXPORT_FRAME"] = frame
-    table.insert(UISpecialFrames, "SwirlUI_AF_EXPORT_FRAME")
+    BuildHeader(win, SUI.NameNoCore .. " Export", function() win:Hide() end)
 
-    local exportGroup = AF.CreateTitledPane(frame, "Export Profiles", 300, 260)
-    AF.SetPoint(exportGroup, "TOPLEFT", 5, -5)
-
-    local yOffset = -25
-    for _, profile in ipairs(SwirlUI.ImportProfiles) do
-        local btn = AF.CreateButton(exportGroup, string.format("Export %s", SwirlUI.ApplyColor(profile.name, profile.color)), addonName, 300, 24)
-        AF.SetPoint(btn, "TOPLEFT", 0, yOffset)
-        yOffset = yOffset - 29
-        btn:SetOnClick(function()
-            local exportFunction = string.format("Export%s", profile.short or profile.name)
-            if SwirlUI.Imports[exportFunction] then
-                SwirlUI.Imports[exportFunction](SwirlUI.Imports)
-            else
-                U:Print(string.format("Export function %s not found!", exportFunction))
-            end
-        end)
+    local yOff = -(theme.headerHeight + spacing)
+    for _, profile in ipairs(SUI.ImportProfiles) do
+        local lbl = string.format("Export %s", WrapTextInColorCode(profile.name, profile.color))
+        local btn = C:CreateButton(win, lbl, {
+            width = WIN_W - theme.padding.med * 2,
+            height = btnH,
+            callback = function()
+                local fn = string.format("Export%s", profile.short or profile.name)
+                if SUI.Imports[fn] then SUI.Imports[fn](SUI.Imports) end
+            end,
+        })
+        btn:SetPoint("TOPLEFT", win, "TOPLEFT", theme.padding.med, yOff)
+        yOff = yOff - (btnH + spacing)
     end
 
-    frame:Show()
-    return frame
+    win:Show()
+    _G["SwirlUI_Export_Frame"] = win
+    table.insert(UISpecialFrames, "SwirlUI_Export_Frame")
+    _G.SWIRLUI_EXPORT_FRAME = win
 end
 
-function SwirlUI:ReloadDialog(frame)
-    local text = "Reload the UI to apply changes?"
-    AF.ShowConfirmPopup(text, function()
+function SUI:ReloadDialog()
+    SUI.Components.ShowConfirm("Reload the UI to apply changes?", function()
         C_UI.Reload()
-    end, function()
     end)
 end
 
-function SwirlUI.CreateStatusDialog(title, content, editBoxContent)
-    local width, height = 400, 25
-    if editBoxContent then height = height + 40 end
-    if content then height = height + 30 end
-    local frame = AF.CreateHeaderedFrame(AF.UIParent, nil, title, width, height)
-    AF.SetPoint(frame, "CENTER", UIParent, "CENTER", 0, 0)
-    frame:SetFrameLevel(200)
-    frame:SetTitleColor("white")
-    frame:SetTitleJustify("CENTER")
-    frame:SetMovable(false)
-    frame:SetResizable(false)
-    frame:SetScript("OnHide", function()
-        frame:Hide()
-    end)
-    frame:Show()
+function SUI.CreateStatusDialog(title, content, editBoxContent)
+    local theme = T()
+    local WIN_W = 400
+    local WIN_H = 25 + (content and 30 or 0) + (editBoxContent and 40 or 0) + 34
 
-    local yOffset = -5
+    local win = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+    win:SetSize(WIN_W, WIN_H)
+    win:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    win:SetFrameStrata("DIALOG")
+    win:SetMovable(false)
+    SetBackdrop(win, theme.bg.dark, theme.border.color)
+
+    local header = BuildHeader(win, title or "", function() win:Hide() end)
+    header.titleFS:SetPoint("CENTER", header, "CENTER", 0, 0)
+
+    local yOff = -(theme.headerHeight + theme.padding.med)
+
     if content then
-        local contentText = AF.CreateFontString(frame, content, "white", "AF_FONT_NORMAL")
-        AF.SetPoint(contentText, "TOPLEFT", frame, "TOPLEFT", 5, yOffset)
-        yOffset = yOffset - 30
+        local fs = win:CreateFontString(nil, "OVERLAY")
+        ApplyFont(fs, "normal")
+        fs:SetText(content)
+        local color = theme.text.primary
+        fs:SetTextColor(color.r, color.g, color.b, 1)
+        fs:SetPoint("TOPLEFT", win, "TOPLEFT", theme.padding.med, yOff)
+        yOff = yOff - 30
     end
 
-    local editBox
     if editBoxContent then
-        editBox = AF.CreateEditBox(frame, nil, width - 10, 24)
-        AF.SetPoint(editBox, "TOPLEFT", frame, "TOPLEFT", 5, yOffset)
+        local editBox = CreateFrame("EditBox", nil, win, "InputBoxTemplate")
+        editBox:SetSize(WIN_W - theme.padding.med * 2, 22)
+        editBox:SetPoint("TOPLEFT", win, "TOPLEFT", theme.padding.med, yOff)
+        editBox:SetAutoFocus(false)
         editBox:SetText(editBoxContent)
-        editBox:SetNotUserChangable(true)
         editBox:SetCursorPosition(0)
         editBox:HighlightText()
         editBox:SetFocus()
-        yOffset = yOffset - 40
     end
 
-    local okBtn = AF.CreateButton(frame, "OK", addonName, 80, 24)
-    AF.SetPoint(okBtn, "BOTTOM", frame, "BOTTOM", 0, 5)
-    okBtn:SetOnClick(function()
-        frame:Hide()
-    end)
-    
-    return frame
+    local okBtn = C:CreateButton(win, "OK", {
+        width = 80,
+        height = 24,
+        callback = function() win:Hide() end,
+    })
+    okBtn:SetPoint("BOTTOM", win, "BOTTOM", 0, theme.padding.med)
+
+    win:Show()
+    return win
 end
 
 SLASH_SWIRLUI1 = "/swirlui"
@@ -212,8 +275,16 @@ SLASH_SWIRLUI2 = "/sui"
 SLASH_SWIRLUI3 = "/swirl"
 SlashCmdList["SWIRLUI"] = function(msg)
     if msg == "export" then
-        SwirlUI.ShowExportGUI_AF()
+        SUI.ShowExport()
+    elseif msg == "toast" then
+        SUI.Components.ShowToast("SwirlUI\nTest toast message", 3)
+    elseif msg == "confirm" then
+        SUI.Components.ShowConfirm("Test confirm dialog?", function()
+            print("SwirlUI: confirmed")
+        end, function()
+            print("SwirlUI: cancelled")
+        end)
     else
-        SwirlUI.ShowImportGUI_AF()
+        SUI.Show()
     end
 end

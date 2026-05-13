@@ -1,254 +1,150 @@
-local addonName, SwirlUI = ...
-local AF = _G.AbstractFramework
+local _, SUI = ...
+local C = SUI.Components
+
+local function T() return SUI.Theme end
 
 local optionsTab
 
-local function SetGroupHoverEffect(group)
-    group:SetScript("OnEnter", function(self)
-        self:SetBackdropBorderColor(AF.GetColorRGB(addonName))
+local function BuildUIScaleCard(scrollChild, y)
+    local theme = T()
+    local card  = C:CreateCard(scrollChild, "UI Scale")
+    scrollChild:PlaceCard(card, y)
+
+    local scaleSlider = C:CreateSlider(card, "UI Scale", 0.1, 2.0, 0.01,
+        function() return tonumber(GetCVar("UIScale")) or 1 end,
+        function(v) UIParent:SetScale(v); SetCVar("UIScale", v) end)
+    card:AddWidget(scaleSlider, 36, theme.padding.small)
+
+    local presets = { 0.53, 0.63, 0.71, 1.0 }
+    local btnRow  = CreateFrame("Frame", nil, card)
+    btnRow:SetHeight(24)
+    card:AddWidget(btnRow, 24, theme.padding.small)
+
+    C_Timer.After(0, function()
+        local availW = btnRow:GetWidth()
+        if availW <= 0 then availW = card:GetWidth() - theme.padding.med * 2 end
+        local n    = #presets
+        local btnW = math.floor((availW - (n - 1) * theme.padding.small) / n)
+        for i, scale in ipairs(presets) do
+            local b = C:CreateButton(btnRow, tostring(scale), {
+                width    = btnW,
+                height   = 24,
+                callback = function()
+                    SetCVar("UIScale", scale)
+                    UIParent:SetScale(scale)
+                    scaleSlider:SetVal(scale)
+                    SUI.SettingsChanged = true
+                end,
+            })
+            b:SetPoint("TOPLEFT", btnRow, "TOPLEFT", (i - 1) * (btnW + theme.padding.small), 0)
+        end
     end)
 
-    group:SetScript("OnLeave", function(self)
-        -- check if cursor is still in bounds in case of child elements *technically* leaving the group
-        C_Timer.After(0.01, function()
-            local x, y = GetCursorPosition()
-            local scale = UIParent:GetEffectiveScale()
-            x, y = x / scale, y / scale
-
-            local left = self:GetLeft()
-            local right = self:GetRight()
-            local top = self:GetTop()
-            local bottom = self:GetBottom()
-
-            if not (left and right and top and bottom) then
-                self:SetBackdropBorderColor(AF.GetColorRGB("black"))
-                return
-            end
-
-            if x >= left and x <= right and y >= bottom and y <= top then
-                -- still in bounds! :D
-            else
-                self:SetBackdropBorderColor(AF.GetColorRGB("black"))
-            end
-        end)
-    end)
+    return y + card:GetHeight() + theme.padding.small
 end
 
-local function CreateUIScaleGroup(scrollContent, borderedFrameWidth, availableWidgetWidth)
-    local uiScaleGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 80, "background2", "black")
-    uiScaleGroup:SetLabel("UI Scale")
-    AF.SetPoint(uiScaleGroup, "TOPLEFT", scrollContent, "TOPLEFT", 5, -20)
-    SetGroupHoverEffect(uiScaleGroup)
+local function BuildChatBubblesCard(scrollChild, y)
+    local theme = T()
+    local card  = C:CreateCard(scrollChild, "Chat Bubbles")
+    scrollChild:PlaceCard(card, y)
 
-    local uiScaleSlider = AF.CreateSlider(uiScaleGroup, "UI Scale", availableWidgetWidth, 0.1, 2, 0.01, false, true)
-    AF.SetPoint(uiScaleSlider, "TOPLEFT", uiScaleGroup, "TOPLEFT", 5, -20)
-    uiScaleSlider:SetValue(tonumber(GetCVar("UIScale")))
-    uiScaleSlider:SetAfterValueChanged(function(value)
-        UIParent:SetScale(value)
-        SetCVar("UIScale", value)
-        SwirlUI.SettingsChanged = true
-    end)
-
-    local presetScales = {0.53, 0.63, 0.71, 1}
-    for i, scale in ipairs(presetScales) do
-        local buttonWidth = (availableWidgetWidth - ((#presetScales - 1) * 5)) / #presetScales
-        local scaleBtn = AF.CreateButton(uiScaleGroup, tostring(scale), addonName, buttonWidth, 22)
-        AF.SetPoint(scaleBtn, "TOPLEFT", uiScaleSlider, "BOTTOMLEFT", (i-1) * (buttonWidth + 5), -20)
-        scaleBtn:SetOnClick(function()
-            SetCVar("UIScale", scale)
-            UIParent:SetScale(scale)
-            uiScaleSlider:SetValue(scale)
-            SwirlUI.SettingsChanged = true
+    local toggle = C:CreateToggle(card, "Enable",
+        SwirlUIDB.uiSettings.chatBubbles.enabled,
+        function(v)
+            SwirlUIDB.uiSettings.chatBubbles.enabled = v
+            SUI.SettingsChanged = true
         end)
+    card:AddWidget(toggle, 36, theme.padding.small)
+
+    local fsSlider = C:CreateSlider(card, "Font Size", 2, 24, 1,
+        function() return SwirlUIDB.uiSettings.chatBubbles.fontSize end,
+        function(v) SwirlUIDB.uiSettings.chatBubbles.fontSize = v end)
+    card:AddWidget(fsSlider, 36, theme.padding.small)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
+local function BuildOffsetCard(scrollChild, y, cardTitle, dbKey)
+    local theme = T()
+    local card  = C:CreateCard(scrollChild, cardTitle)
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings[dbKey]
+
+    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+        function(v) db.enabled = v; SUI.SettingsChanged = true end)
+    card:AddWidget(toggle, 36, theme.padding.small)
+
+    local fsSlider = C:CreateSlider(card, "Font Size", 8, 24, 1,
+        function() return db.fontSize end,
+        function(v) db.fontSize = v end)
+    card:AddWidget(fsSlider, 36, theme.padding.small)
+
+    local xSlider = C:CreateSlider(card, "X Offset", -500, 500, 1,
+        function() return db.offsetX end,
+        function(v) db.offsetX = v end)
+    card:AddWidget(xSlider, 36, theme.padding.small)
+
+    local ySlider = C:CreateSlider(card, "Y Offset", -500, 500, 1,
+        function() return db.offsetY end,
+        function(v) db.offsetY = v end)
+    card:AddWidget(ySlider, 36, theme.padding.small)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
+local function BuildMouseClickCard(scrollChild, y)
+    local theme = T()
+    local card  = C:CreateCard(scrollChild, "Mouse Click")
+    scrollChild:PlaceCard(card, y)
+
+    local function GetMC(k)
+        return SwirlUIDB.uiSettings.mouseClick and SwirlUIDB.uiSettings.mouseClick[k] or false
     end
-
-    return uiScaleGroup
-end
-
-local function CreateChatBubblesGroup(scrollContent, previousGroup, borderedFrameWidth)
-    local chatBubblesGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 82, "background2", "black")
-    chatBubblesGroup:SetLabel("Chat Bubbles")
-    AF.SetPoint(chatBubblesGroup, "TOPLEFT", previousGroup, "BOTTOMLEFT", 0, -25)
-    SetGroupHoverEffect(chatBubblesGroup)
-
-    local chatBubblesEnabled = AF.CreateCheckButton(chatBubblesGroup, "Enable", function(checked)
-        SwirlUIDB.uiSettings.chatBubbles.enabled = checked
-        AF.Fire("SwirlUI_ChatBubbles_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(chatBubblesEnabled, "TOPLEFT", chatBubblesGroup, "TOPLEFT", 5, -10)
-    chatBubblesEnabled:SetChecked(SwirlUIDB.uiSettings.chatBubbles.enabled)
-
-    local chatBubblesFontSize = AF.CreateSlider(chatBubblesGroup, "Font Size", 200, 2, 24, 1, false, true)
-    AF.SetPoint(chatBubblesFontSize, "TOPLEFT", chatBubblesEnabled, "BOTTOMLEFT", 0, -25)
-    chatBubblesFontSize:SetValue(SwirlUIDB.uiSettings.chatBubbles.fontSize)
-    chatBubblesFontSize:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.chatBubbles.fontSize = value
-        AF.Fire("SwirlUI_ChatBubbles_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    return chatBubblesGroup
-end
-
-local function CreateUIErrorsGroup(scrollContent, previousGroup, borderedFrameWidth)
-    local uiErrorsGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 127, "background2", "black")
-    uiErrorsGroup:SetLabel("UI Errors")
-    AF.SetPoint(uiErrorsGroup, "TOPLEFT", previousGroup, "BOTTOMLEFT", 0, -25)
-    SetGroupHoverEffect(uiErrorsGroup)
-
-    local uiErrorsEnabled = AF.CreateCheckButton(uiErrorsGroup, "Enable", function(checked)
-        SwirlUIDB.uiSettings.uiErrors.enabled = checked
-        AF.Fire("SwirlUI_UIErrors_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(uiErrorsEnabled, "TOPLEFT", uiErrorsGroup, "TOPLEFT", 5, -10)
-    uiErrorsEnabled:SetChecked(SwirlUIDB.uiSettings.uiErrors.enabled)
-
-    local uiErrorsFontSize = AF.CreateSlider(uiErrorsGroup, "Font Size", 200, 8, 24, 1, false, true)
-    AF.SetPoint(uiErrorsFontSize, "TOPLEFT", uiErrorsEnabled, "BOTTOMLEFT", 0, -25)
-    uiErrorsFontSize:SetValue(SwirlUIDB.uiSettings.uiErrors.fontSize)
-    uiErrorsFontSize:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.uiErrors.fontSize = value
-        AF.Fire("SwirlUI_UIErrors_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    local uiErrorsOffsetX = AF.CreateSlider(uiErrorsGroup, "X Offset", 200, -500, 500, 1, false, true)
-    AF.SetPoint(uiErrorsOffsetX, "TOPLEFT", uiErrorsFontSize, "BOTTOMLEFT", 0, -35)
-    uiErrorsOffsetX:SetValue(SwirlUIDB.uiSettings.uiErrors.offsetX)
-    uiErrorsOffsetX:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.uiErrors.offsetX = value
-        AF.Fire("SwirlUI_UIErrors_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    local uiErrorsOffsetY = AF.CreateSlider(uiErrorsGroup, "Y Offset", 200, -500, 500, 1, false, true)
-    AF.SetPoint(uiErrorsOffsetY, "TOPLEFT", uiErrorsOffsetX, "TOPRIGHT", 10, 0)
-    uiErrorsOffsetY:SetValue(SwirlUIDB.uiSettings.uiErrors.offsetY)
-    uiErrorsOffsetY:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.uiErrors.offsetY = value
-        AF.Fire("SwirlUI_UIErrors_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    return uiErrorsGroup
-end
-
-local function CreateActionStatusGroup(scrollContent, previousGroup, borderedFrameWidth)
-    local actionStatusGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 127, "background2", "black")
-    actionStatusGroup:SetLabel("Action Status")
-    AF.SetPoint(actionStatusGroup, "TOPLEFT", previousGroup, "BOTTOMLEFT", 0, -25)
-    SetGroupHoverEffect(actionStatusGroup)
-
-    local actionStatusEnabled = AF.CreateCheckButton(actionStatusGroup, "Enable", function(checked)
-        SwirlUIDB.uiSettings.actionStatus.enabled = checked
-        AF.Fire("SwirlUI_ActionStatus_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(actionStatusEnabled, "TOPLEFT", actionStatusGroup, "TOPLEFT", 5, -10)
-    actionStatusEnabled:SetChecked(SwirlUIDB.uiSettings.actionStatus.enabled)
-
-    local actionStatusFontSize = AF.CreateSlider(actionStatusGroup, "Font Size", 200, 8, 24, 1, false, true)
-    AF.SetPoint(actionStatusFontSize, "TOPLEFT", actionStatusEnabled, "BOTTOMLEFT", 0, -25)
-    actionStatusFontSize:SetValue(SwirlUIDB.uiSettings.actionStatus.fontSize)
-    actionStatusFontSize:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.actionStatus.fontSize = value
-        AF.Fire("SwirlUI_ActionStatus_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    local actionStatusOffsetX = AF.CreateSlider(actionStatusGroup, "X Offset", 200, -500, 500, 1, false, true)
-    AF.SetPoint(actionStatusOffsetX, "TOPLEFT", actionStatusFontSize, "BOTTOMLEFT", 0, -35)
-    actionStatusOffsetX:SetValue(SwirlUIDB.uiSettings.actionStatus.offsetX)
-    actionStatusOffsetX:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.actionStatus.offsetX = value
-        AF.Fire("SwirlUI_ActionStatus_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    local actionStatusOffsetY = AF.CreateSlider(actionStatusGroup, "Y Offset", 200, -500, 500, 1, false, true)
-    AF.SetPoint(actionStatusOffsetY, "TOPLEFT", actionStatusOffsetX, "TOPRIGHT", 10, 0)
-    actionStatusOffsetY:SetValue(SwirlUIDB.uiSettings.actionStatus.offsetY)
-    actionStatusOffsetY:SetAfterValueChanged(function(value)
-        SwirlUIDB.uiSettings.actionStatus.offsetY = value
-        AF.Fire("SwirlUI_ActionStatus_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-
-    return actionStatusGroup
-end
-
-local function CreateMouseClickGroup(scrollContent, previousGroup, borderedFrameWidth)
-    local mouseClickGroup = AF.CreateBorderedFrame(scrollContent, nil, borderedFrameWidth, 58, "background2", "black")
-    mouseClickGroup:SetLabel("Mouse Click")
-    AF.SetPoint(mouseClickGroup, "TOPLEFT", previousGroup, "BOTTOMLEFT", 0, -25)
-    SetGroupHoverEffect(mouseClickGroup)
-
-    local extraActionButtonCheckbox = AF.CreateCheckButton(mouseClickGroup, "Remove Empty Spacing around Extra Action Button", function(checked)
+    local function SetMC(k, v)
         if not SwirlUIDB.uiSettings.mouseClick then
             SwirlUIDB.uiSettings.mouseClick = { extraActionButton = false, lfgListFrame = false }
         end
-        SwirlUIDB.uiSettings.mouseClick.extraActionButton = checked
-        AF.Fire("SwirlUI_MouseClick_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(extraActionButtonCheckbox, "TOPLEFT", mouseClickGroup, "TOPLEFT", 5, -10)
-
-    local lfgListFrameCheckbox = AF.CreateCheckButton(mouseClickGroup, "Enable Click-Through in LFG", function(checked)
-        if not SwirlUIDB.uiSettings.mouseClick then
-            SwirlUIDB.uiSettings.mouseClick = { extraActionButton = false, lfgListFrame = false }
-        end
-        SwirlUIDB.uiSettings.mouseClick.lfgListFrame = checked
-        AF.Fire("SwirlUI_MouseClick_Changed")
-        SwirlUI.SettingsChanged = true
-    end)
-    AF.SetPoint(lfgListFrameCheckbox, "TOPLEFT", extraActionButtonCheckbox, "BOTTOMLEFT", 0, -10)
-
-    if SwirlUIDB.uiSettings.mouseClick then
-        if SwirlUIDB.uiSettings.mouseClick.extraActionButton then
-            extraActionButtonCheckbox:SetChecked(true)
-        end
-        if SwirlUIDB.uiSettings.mouseClick.lfgListFrame then
-            lfgListFrameCheckbox:SetChecked(true)
-        end
+        SwirlUIDB.uiSettings.mouseClick[k] = v
+        SUI.SettingsChanged = true
     end
 
-    return mouseClickGroup
+    local extraToggle = C:CreateToggle(card, "Remove Empty Spacing around Extra Action Button",
+        GetMC("extraActionButton"),
+        function(v) SetMC("extraActionButton", v) end)
+    card:AddWidget(extraToggle, 36, theme.padding.small)
+
+    local lfgToggle = C:CreateToggle(card, "Enable Click-Through in LFG",
+        GetMC("lfgListFrame"),
+        function(v) SetMC("lfgListFrame", v) end)
+    card:AddWidget(lfgToggle, 36, theme.padding.small)
+
+    return y + card:GetHeight() + theme.padding.small
 end
 
 local function CreateOptionsTab()
-    optionsTab = AF.CreateFrame(SwirlUI.frames.optionsFrame, "SwirlUI_OptionsTab", nil, nil, true)
-    optionsTab:SetAllPoints(SwirlUI.frames.optionsFrame)
-    SwirlUI.frames.optionsTab = optionsTab
+    local theme  = T()
+    local parent = SUI.frames.optionsContent
 
-    local width = 440
-    local borderedFrameWidth = width - 15
-    local scrollFrame = AF.CreateScrollFrame(SwirlUI.frames.optionsTab, nil, width, 380, "none", "black")
-    AF.SetPoint(scrollFrame, "TOPLEFT", SwirlUI.frames.optionsTab, "TOPLEFT", 0, -20)
+    optionsTab = CreateFrame("Frame", "SwirlUI_OptionsTab", parent)
+    optionsTab:SetAllPoints(parent)
+    SUI.frames.optionsTab = optionsTab
 
-    local availableWidgetWidth = borderedFrameWidth - 10
+    local scrollChild = C:CreateTabScroller(optionsTab)
 
-    local uiScaleGroup = CreateUIScaleGroup(scrollFrame.scrollContent, borderedFrameWidth, availableWidgetWidth)
-    local chatBubblesGroup = CreateChatBubblesGroup(scrollFrame.scrollContent, uiScaleGroup, borderedFrameWidth)
-    local uiErrorsGroup = CreateUIErrorsGroup(scrollFrame.scrollContent, chatBubblesGroup, borderedFrameWidth)
-    local actionStatusGroup = CreateActionStatusGroup(scrollFrame.scrollContent, uiErrorsGroup, borderedFrameWidth)
-    local mouseClickGroup = CreateMouseClickGroup(scrollFrame.scrollContent, actionStatusGroup, borderedFrameWidth)
+    local y = theme.padding.small
+    y = BuildUIScaleCard(scrollChild, y)
+    y = BuildChatBubblesCard(scrollChild, y)
+    y = BuildOffsetCard(scrollChild, y, "UI Errors",     "uiErrors")
+    y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
+    y = BuildMouseClickCard(scrollChild, y)
 
-    scrollFrame:SetContentHeight(600)
+    scrollChild:Commit(y)
 end
 
-local function ShowTab(callback, tab)
-    if tab == "Options" then
-        if not optionsTab then
-            CreateOptionsTab()
-        end
-        optionsTab:Show()
-    else
-        if optionsTab then
-            optionsTab:Hide()
-        end
+function SUI.BuildOptionsTab()
+    if not optionsTab then
+        CreateOptionsTab()
     end
+    optionsTab:Show()
 end
-
-AF.RegisterCallback("ShowOptionsTab", ShowTab, "medium")
