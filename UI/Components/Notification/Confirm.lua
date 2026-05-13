@@ -39,12 +39,12 @@ local function BuildConfirm()
     confirm.cancelLabel = cancelLabel
 
     okBtn:SetScript("OnEnter", function()
-        local s = N.T().success
+        local s = N.T().friendly
         okBtn:SetBackdropBorderColor(s[1], s[2], s[3], 1)
     end)
     okBtn:SetScript("OnLeave", function() okBtn:SetBackdropBorderColor(0, 0, 0, 1) end)
     cancelBtn:SetScript("OnEnter", function()
-        local e = N.T().error
+        local e = N.T().hostile
         cancelBtn:SetBackdropBorderColor(e[1], e[2], e[3], 1)
     end)
     cancelBtn:SetScript("OnLeave", function() cancelBtn:SetBackdropBorderColor(0, 0, 0, 1) end)
@@ -58,9 +58,9 @@ function SUI.Components.ShowConfirm(text, onConfirm, onCancel)
     N.SetBackdrop(confirm.okBtn, theme.bgMedium, theme.border)
     N.SetBackdrop(confirm.cancelBtn, theme.bgMedium, theme.border)
     N.ApplyAccent(confirm)
-    local s = theme.success
+    local s = theme.friendly
     confirm.okLabel:SetTextColor(s[1], s[2], s[3], 1)
-    local e = theme.error
+    local e = theme.hostile
     confirm.cancelLabel:SetTextColor(e[1], e[2], e[3], 1)
     confirm.msg:SetText(text)
 
