@@ -173,7 +173,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     local function AnimateEditBorder(toAccent)
         ebAG:Stop()
         ebFrom.r, ebFrom.g, ebFrom.b = ebR, ebG, ebB
-        local c = toAccent and T().accent or T().border
+        local c = toAccent and T().accent or T().border.color
         ebTo.r, ebTo.g, ebTo.b = c.r, c.g, c.b
         ebAG:Play()
     end

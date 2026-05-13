@@ -49,7 +49,7 @@ function C:CreateButton(parent, labelText, config)
         end
     end)
     btn:SetScript("OnLeave", function()
-        local bd = T().border
+        local bd = T().border.color
         toColor.r, toColor.g, toColor.b = bd.r, bd.g, bd.b
         AnimateBorderColor(btn, animGroup, fromColor, toColor)
         GameTooltip:Hide()
