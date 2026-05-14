@@ -15,6 +15,11 @@ function SUI.AddTab(key, title, onSelect)
     table.insert(registeredTabs, { key = key, title = title, onSelect = onSelect })
 end
 
+SwirlUI_AddTab = SUI.AddTab
+SwirlUI_Components = SUI.Components
+SwirlUI_Theme = SUI.Theme
+SwirlUI = SUI
+
 local tabs = {
     {
         key = "General",
