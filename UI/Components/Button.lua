@@ -4,11 +4,12 @@ local T, ApplyFont, SetBackdrop, AnimateBorderColor = C.T, C.ApplyFont, C.SetBac
 
 function C:CreateButton(parent, labelText, config)
     config = config or {}
-    local theme    = T()
-    local width    = config.width    or 120
-    local height   = config.height   or 24
+    local theme = T()
+    local width = config.width or 120
+    local height = config.height or 24
     local callback = config.callback or function() end
-    local tooltip  = config.tooltip
+    local tooltip = config.tooltip
+    local font = config.font or "normal"
 
     local btn = CreateFrame("Button", nil, parent, "BackdropTemplate")
     btn:SetSize(width, height)
@@ -32,7 +33,7 @@ function C:CreateButton(parent, labelText, config)
     end)
 
     local label = btn:CreateFontString(nil, "OVERLAY")
-    ApplyFont(label, "normal")
+    ApplyFont(label, font)
     label:SetText(labelText or "")
     label:SetTextColor(theme.accent.r, theme.accent.g, theme.accent.b, 1)
     label:SetPoint("CENTER", btn, "CENTER", 0, 0)
