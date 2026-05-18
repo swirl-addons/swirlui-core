@@ -86,7 +86,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
 
     local function UpdateColors(toState, instant)
         local ac  = T().accent
-        local bgD = T().bg.dark
+        local bgD = T().bg.med
         local bgA = CreateColor(ac.r * 0.5, ac.g * 0.5, ac.b * 0.5, 1)
         if instant then
             if toState then
