@@ -10,7 +10,7 @@ N.FADE_TIME = FADE_TIME
 function N.BuildPanel(name, w, h, strata)
     local f = CreateFrame("Frame", name, UIParent, "BackdropTemplate")
     f:SetSize(w, h)
-    f:SetPoint("TOP", UIParent, "TOP", 0, -100)
+    f:SetPoint("TOP", UIParent, "TOP", 0, -175)
     f:SetFrameStrata(strata)
     f:SetAlpha(0)
     f:Hide()

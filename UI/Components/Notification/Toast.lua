@@ -31,7 +31,7 @@ local function ShowNext()
     N.ApplyAccent(popup)
     popup.msg:SetText(item.text)
     popup:ClearAllPoints()
-    popup:SetPoint("TOP", UIParent, "TOP", 0, -100)
+    popup:SetPoint("TOP", UIParent, "TOP", 0, -175)
 
     N.FadeIn(popup)
     C_Timer.After(N.FADE_TIME + dur, function()
