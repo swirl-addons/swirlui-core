@@ -31,7 +31,13 @@ Constants.lua
 UI/Init.lua
 UI/Util.lua
 UI/Components/Button.lua
+UI/Components/IconButton.lua
 UI/Components/Toggle.lua
+UI/Components/Dropdown.lua
+UI/Components/EntryBox.lua
+UI/Components/EditBox.lua
+UI/Components/ColorPicker.lua
+UI/Components/XYPosition.lua
 UI/Components/Card.lua
 UI/Components/Slider.lua
 UI/Components/Scrollbar.lua
