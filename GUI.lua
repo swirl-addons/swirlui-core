@@ -59,21 +59,8 @@ local function BuildHeader(win, titleText, onClose)
     titleFS:SetPoint("LEFT", header, "LEFT", theme.padding.large, 0)
     header.titleFS = titleFS
 
-    local closeBtn = CreateFrame("Button", nil, header)
-    closeBtn:SetSize(26, 26)
+    local closeBtn = C:CreateCloseButton(header, onClose)
     closeBtn:SetPoint("RIGHT", header, "RIGHT", -6, 0)
-
-    local closeLbl = closeBtn:CreateFontString(nil, "OVERLAY")
-    closeLbl:SetAllPoints()
-    closeLbl:SetJustifyH("CENTER")
-    closeLbl:SetJustifyV("MIDDLE")
-    closeLbl:SetFont(theme.font.path, theme.font.size.large + 6, "OUTLINE")
-    closeLbl:SetText("×")
-    closeLbl:SetTextColor(0.5, 0.5, 0.5, 1)
-    closeLbl:SetShadowColor(0, 0, 0, 0)
-    closeBtn:SetScript("OnEnter", function() closeLbl:SetTextColor(theme.error.r, theme.error.g, theme.error.b, 1) end)
-    closeBtn:SetScript("OnLeave", function() closeLbl:SetTextColor(0.5, 0.5, 0.5, 1) end)
-    closeBtn:SetScript("OnClick", onClose)
 
     header:EnableMouse(true)
     header:RegisterForDrag("LeftButton")
