@@ -53,7 +53,7 @@ local T = {
     toggleWidth = 34,
 
     padding = {
-        small = 4,
+        small = 6,
         med = 8,
         large = 12,
     },
