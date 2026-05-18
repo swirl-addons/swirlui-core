@@ -45,6 +45,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
 
     local thumbFrame = CreateFrame("Frame", nil, slider, "BackdropTemplate")
     thumbFrame:SetSize(19, 12)
+    local color = theme.text.secondary
     SetBackdrop(thumbFrame,
         CreateColor(color.r, color.g, color.b, 0.6),
         CreateColor(0, 0, 0, 1))
