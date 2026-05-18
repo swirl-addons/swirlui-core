@@ -73,6 +73,42 @@ function C:CreateCard(parent, title)
         return fs
     end
 
+    local blocker = CreateFrame("Frame", nil, card)
+    blocker:SetAllPoints()
+    blocker:SetFrameLevel(card:GetFrameLevel() + 100)
+    blocker:EnableMouse(false)
+
+    local _dependents = {}
+    local _enableValue = nil
+
+    function card:SetEnabled(enabled)
+        self:SetAlpha(enabled and 1 or 0.4)
+        blocker:EnableMouse(not enabled)
+    end
+
+    function card:SetDependents(...)
+        _dependents = { ... }
+        if _enableValue ~= nil then
+            for _, dep in ipairs(_dependents) do
+                dep:SetEnabled(_enableValue)
+            end
+        end
+    end
+
+    function card:AddEnableToggle(label, initialValue, onChange, config)
+        config = config or {}
+        _enableValue = initialValue
+        local toggle = C:CreateToggle(self, label, initialValue, function(val)
+            _enableValue = val
+            for _, dep in ipairs(_dependents) do
+                dep:SetEnabled(val)
+            end
+            if onChange then onChange(val) end
+        end)
+        self:AddWidget(toggle, config.height or 36, config.topPad)
+        return toggle
+    end
+
     card:SetHeight(headerH + theme.padding.med)
     return card
 end
