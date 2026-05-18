@@ -2,27 +2,29 @@ local _, SUI = ...
 local C = SUI.Components
 local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
 
-function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
-    local theme          = T()
+function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal, config)
+    config = config or {}
+    local theme = T()
     local stepperTexture = "Interface\\AddOns\\SwirlUI\\Media\\Chevron.png"
 
     local row = CreateFrame("Frame", nil, parent)
     row:SetHeight(36)
+    if config.width then row:SetWidth(config.width) end
 
     local label = C.CreateLabel(row, labelText)
     row.label = label
 
-    local sliderLeftOff = theme.toggleWidth + 20  -- value box + left stepper
+    local sliderLeftOff = theme.toggleWidth + 20
     local sliderBG = CreateFrame("Frame", nil, row, "BackdropTemplate")
     sliderBG:SetHeight(8)
-    sliderBG:SetPoint("TOPLEFT",  row, "TOPLEFT",  sliderLeftOff, -22)
+    sliderBG:SetPoint("TOPLEFT", row, "TOPLEFT", sliderLeftOff, -22)
     sliderBG:SetPoint("TOPRIGHT", row, "TOPRIGHT", -18, -22)
     SetBackdrop(sliderBG, theme.bg.med, theme.border.color)
     sliderBG:EnableMouse(false)
 
     local slider = CreateFrame("Slider", nil, row, "BackdropTemplate")
     slider:SetHeight(8)
-    slider:SetPoint("TOPLEFT",  row, "TOPLEFT",  sliderLeftOff, -22)
+    slider:SetPoint("TOPLEFT", row, "TOPLEFT", sliderLeftOff, -22)
     slider:SetPoint("TOPRIGHT", row, "TOPRIGHT", -18, -22)
     slider:SetOrientation("HORIZONTAL")
     slider:SetMinMaxValues(minVal, maxVal)
@@ -63,11 +65,11 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
         end
     end)
 
-    local thumbAG   = slider:CreateAnimationGroup()
+    local thumbAG = slider:CreateAnimationGroup()
     local thumbAnim = thumbAG:CreateAnimation("Animation")
     thumbAnim:SetDuration(0.18)
     local tFrom = {}
-    local tTo   = {}
+    local tTo = {}
     local tR, tG, tB, tA = color.r, color.g, color.b, 0.6
 
     local function AnimateThumb(toHover, toDrag)
@@ -112,11 +114,11 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
         icon:SetSnapToPixelGrid(false)
         icon:SetTexture(stepperTexture)
 
-        local sAG   = btn:CreateAnimationGroup()
+        local sAG = btn:CreateAnimationGroup()
         local sAnim = sAG:CreateAnimation("Animation")
         sAnim:SetDuration(0.18)
         local sFrom = {}
-        local sTo   = {}
+        local sTo = {}
         local sR, sG, sB = color.r, color.g, color.b
 
         local function AnimateStepper(toAccent)
@@ -161,8 +163,8 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     local AnimateEditBorder = C.MakeBorderAnimator(valueContainer, 0.18)
 
     local valueEdit = CreateFrame("EditBox", nil, valueContainer)
-    valueEdit:SetPoint("TOPLEFT",     valueContainer, "TOPLEFT",      2, -2)
-    valueEdit:SetPoint("BOTTOMRIGHT", valueContainer, "BOTTOMRIGHT", -2,  2)
+    valueEdit:SetPoint("TOPLEFT", valueContainer, "TOPLEFT", 2, -2)
+    valueEdit:SetPoint("BOTTOMRIGHT", valueContainer, "BOTTOMRIGHT", -2, 2)
     ApplyFont(valueEdit, "small")
     valueEdit:SetTextColor(theme.accent.r, theme.accent.g, theme.accent.b, 1)
     valueEdit:SetJustifyH("CENTER")
@@ -176,7 +178,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
         local val = slider:GetValue()
         local mn, mx = slider:GetMinMaxValues()
         if mx == mn then return end
-        local pct   = (val - mn) / (mx - mn)
+        local pct = (val - mn) / (mx - mn)
         local width = math.max(1, (slider:GetWidth() - 2) * pct)
         fill:SetWidth(width)
         if not isUpdating then
@@ -207,9 +209,9 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
         end
     end
 
-    valueEdit:SetScript("OnEnterPressed",   function(eb) eb:ClearFocus(); CommitEdit() end)
-    valueEdit:SetScript("OnEscapePressed",  function(eb) eb:ClearFocus(); UpdateFill() end)
-    valueEdit:SetScript("OnEditFocusLost",  CommitEdit)
+    valueEdit:SetScript("OnEnterPressed", function(eb) eb:ClearFocus(); CommitEdit() end)
+    valueEdit:SetScript("OnEscapePressed", function(eb) eb:ClearFocus(); UpdateFill() end)
+    valueEdit:SetScript("OnEditFocusLost", CommitEdit)
     valueEdit:SetScript("OnEditFocusGained", function(eb)
         AnimateEditBorder(true)
         eb:HighlightText()
