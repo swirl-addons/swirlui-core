@@ -13,12 +13,12 @@ local function BuildUIScaleCard(scrollChild, y)
     local scaleSlider = C:CreateSlider(card, "UI Scale", 0.1, 2.0, 0.01,
         function() return tonumber(GetCVar("UIScale")) or 1 end,
         function(v) UIParent:SetScale(v); SetCVar("UIScale", v) end)
-    card:AddWidget(scaleSlider, 36, theme.padding.small)
+    card:AddWidget(scaleSlider)
 
     local presets = { 0.53, 0.63, 0.71, 1.0 }
     local btnRow  = CreateFrame("Frame", nil, card)
     btnRow:SetHeight(24)
-    card:AddWidget(btnRow, 24, theme.padding.small)
+    card:AddWidget(btnRow)
 
     C_Timer.After(0, function()
         local availW = btnRow:GetWidth()
@@ -54,12 +54,12 @@ local function BuildChatBubblesCard(scrollChild, y)
             SwirlUIDB.uiSettings.chatBubbles.enabled = v
             SUI.SettingsChanged = true
         end)
-    card:AddWidget(toggle, 36, theme.padding.small)
+    card:AddWidget(toggle)
 
     local fsSlider = C:CreateSlider(card, "Font Size", 2, 24, 1,
         function() return SwirlUIDB.uiSettings.chatBubbles.fontSize end,
         function(v) SwirlUIDB.uiSettings.chatBubbles.fontSize = v end)
-    card:AddWidget(fsSlider, 36, theme.padding.small)
+    card:AddWidget(fsSlider)
 
     return y + card:GetHeight() + theme.padding.small
 end
@@ -73,22 +73,22 @@ local function BuildOffsetCard(scrollChild, y, cardTitle, dbKey)
 
     local toggle = C:CreateToggle(card, "Enable", db.enabled,
         function(v) db.enabled = v; SUI.SettingsChanged = true end)
-    card:AddWidget(toggle, 36, theme.padding.small)
+    card:AddWidget(toggle)
 
     local fsSlider = C:CreateSlider(card, "Font Size", 8, 24, 1,
         function() return db.fontSize end,
         function(v) db.fontSize = v end)
-    card:AddWidget(fsSlider, 36, theme.padding.small)
+    card:AddWidget(fsSlider)
 
     local xSlider = C:CreateSlider(card, "X Offset", -500, 500, 1,
         function() return db.offsetX end,
         function(v) db.offsetX = v end)
-    card:AddWidget(xSlider, 36, theme.padding.small)
+    card:AddWidget(xSlider)
 
     local ySlider = C:CreateSlider(card, "Y Offset", -500, 500, 1,
         function() return db.offsetY end,
         function(v) db.offsetY = v end)
-    card:AddWidget(ySlider, 36, theme.padding.small)
+    card:AddWidget(ySlider)
 
     return y + card:GetHeight() + theme.padding.small
 end
@@ -112,12 +112,12 @@ local function BuildMouseClickCard(scrollChild, y)
     local extraToggle = C:CreateToggle(card, "Remove Empty Spacing around Extra Action Button",
         GetMC("extraActionButton"),
         function(v) SetMC("extraActionButton", v) end)
-    card:AddWidget(extraToggle, 36, theme.padding.small)
+    card:AddWidget(extraToggle)
 
     local lfgToggle = C:CreateToggle(card, "Enable Click-Through in LFG",
         GetMC("lfgListFrame"),
         function(v) SetMC("lfgListFrame", v) end)
-    card:AddWidget(lfgToggle, 36, theme.padding.small)
+    card:AddWidget(lfgToggle)
 
     return y + card:GetHeight() + theme.padding.small
 end

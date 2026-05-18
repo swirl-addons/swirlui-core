@@ -27,7 +27,7 @@ local function CreateGeneralTab()
             SwirlUIDB.uiSettings.silence = val
             SUI.SettingsChanged = true
         end)
-    genCard:AddWidget(silenceToggle, 36, theme.padding.small)
+    genCard:AddWidget(silenceToggle)
 
     y = y + genCard:GetHeight() + theme.padding.small
 

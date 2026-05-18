@@ -30,7 +30,7 @@ function C:CreateCard(parent, title)
 
     card.innerTop = headerH
 
-    function card:AddWidget(widget, widgetHeight, topPad)
+    function card:AddWidget(widget, topPad, widgetHeight)
         local theme2 = T()
         local pad    = topPad or theme2.padding.small
         local yOff   = -(self.innerTop + self.contentHeight + pad)
@@ -105,7 +105,7 @@ function C:CreateCard(parent, title)
             end
             if onChange then onChange(val) end
         end)
-        self:AddWidget(toggle, config.height or 36, config.topPad)
+        self:AddWidget(toggle, config.topPad, config.height or nil)
         return toggle
     end
 
