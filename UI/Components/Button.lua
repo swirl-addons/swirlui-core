@@ -1,6 +1,6 @@
 local _, SUI = ...
 local C = SUI.Components
-local T, ApplyFont, SetBackdrop, AnimateBorderColor = C.T, C.ApplyFont, C.SetBackdrop, C.AnimateBorderColor
+local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
 
 function C:CreateButton(parent, labelText, config)
     config = config or {}
@@ -15,22 +15,7 @@ function C:CreateButton(parent, labelText, config)
     btn:SetSize(width, height)
     SetBackdrop(btn, theme.bg.med, theme.border.color)
 
-    local animGroup = btn:CreateAnimationGroup()
-    local anim      = animGroup:CreateAnimation("Animation")
-    anim:SetDuration(0.15)
-    local fromColor = { r = 0, g = 0, b = 0 }
-    local toColor   = { r = 0, g = 0, b = 0 }
-
-    animGroup:SetScript("OnUpdate", function(self)
-        local p = self:GetProgress() or 0
-        btn:SetBackdropBorderColor(
-            fromColor.r + (toColor.r - fromColor.r) * p,
-            fromColor.g + (toColor.g - fromColor.g) * p,
-            fromColor.b + (toColor.b - fromColor.b) * p, 1)
-    end)
-    animGroup:SetScript("OnFinished", function()
-        btn:SetBackdropBorderColor(toColor.r, toColor.g, toColor.b, 1)
-    end)
+    local AnimBorder = C.MakeBorderAnimator(btn)
 
     local label = btn:CreateFontString(nil, "OVERLAY")
     ApplyFont(label, font)
@@ -40,9 +25,7 @@ function C:CreateButton(parent, labelText, config)
     btn.label = label
 
     btn:SetScript("OnEnter", function()
-        local ac = T().accent
-        toColor.r, toColor.g, toColor.b = ac.r, ac.g, ac.b
-        AnimateBorderColor(btn, animGroup, fromColor, toColor)
+        AnimBorder(true)
         if tooltip then
             GameTooltip:SetOwner(btn, "ANCHOR_TOP")
             GameTooltip:SetText(tooltip, 1, 1, 1, 1, true)
@@ -50,9 +33,7 @@ function C:CreateButton(parent, labelText, config)
         end
     end)
     btn:SetScript("OnLeave", function()
-        local bd = T().border.color
-        toColor.r, toColor.g, toColor.b = bd.r, bd.g, bd.b
-        AnimateBorderColor(btn, animGroup, fromColor, toColor)
+        AnimBorder(false)
         GameTooltip:Hide()
     end)
     btn:SetScript("OnClick", callback)

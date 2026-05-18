@@ -39,9 +39,35 @@ function C.SetBackdrop(frame, bg, border)
     if border then frame:SetBackdropBorderColor(border.r, border.g, border.b, border.a) end
 end
 
-function C.AnimateBorderColor(frame, animGroup, fromColor, toColor)
-    animGroup:Stop()
-    local cr, cg, cb = frame:GetBackdropBorderColor()
-    fromColor.r, fromColor.g, fromColor.b = cr, cg, cb
-    animGroup:Play()
+-- Creates a border color animator on frame. Returns AnimBorder(toAccent).
+function C.MakeBorderAnimator(frame, duration)
+    local theme = C.T()
+    local ag = frame:CreateAnimationGroup()
+    local anim = ag:CreateAnimation("Animation")
+    anim:SetDuration(duration or 0.15)
+
+    local from = {}
+    local to = {}
+    local cr, cg, cb = theme.border.color.r, theme.border.color.g, theme.border.color.b
+
+    ag:SetScript("OnUpdate", function(a)
+        local p = a:GetProgress() or 0
+        local r = from.r + (to.r - from.r) * p
+        local g = from.g + (to.g - from.g) * p
+        local b = from.b + (to.b - from.b) * p
+        frame:SetBackdropBorderColor(r, g, b, 1)
+        cr, cg, cb = r, g, b
+    end)
+    ag:SetScript("OnFinished", function()
+        frame:SetBackdropBorderColor(to.r, to.g, to.b, 1)
+        cr, cg, cb = to.r, to.g, to.b
+    end)
+
+    return function(toAccent)
+        ag:Stop()
+        from.r, from.g, from.b = cr, cg, cb
+        local c = toAccent and C.T().accent or C.T().border.color
+        to.r, to.g, to.b = c.r, c.g, c.b
+        ag:Play()
+    end
 end

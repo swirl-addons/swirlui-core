@@ -158,33 +158,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     valueContainer:SetPoint("RIGHT", sliderBG, "LEFT", -20, 0)
     SetBackdrop(valueContainer, theme.bg.med, theme.border.color)
 
-    local ebAG   = valueContainer:CreateAnimationGroup()
-    local ebAnim = ebAG:CreateAnimation("Animation")
-    ebAnim:SetDuration(0.18)
-    local ebFrom = {}
-    local ebTo   = {}
-    local ebR, ebG, ebB = theme.border.color.r, theme.border.color.g, theme.border.color.b
-
-    local function AnimateEditBorder(toAccent)
-        ebAG:Stop()
-        ebFrom.r, ebFrom.g, ebFrom.b = ebR, ebG, ebB
-        local c = toAccent and T().accent or T().border.color
-        ebTo.r, ebTo.g, ebTo.b = c.r, c.g, c.b
-        ebAG:Play()
-    end
-
-    ebAG:SetScript("OnUpdate", function(ag)
-        local p = ag:GetProgress() or 0
-        local r = ebFrom.r + (ebTo.r - ebFrom.r) * p
-        local g = ebFrom.g + (ebTo.g - ebFrom.g) * p
-        local b = ebFrom.b + (ebTo.b - ebFrom.b) * p
-        valueContainer:SetBackdropBorderColor(r, g, b, 1)
-        ebR, ebG, ebB = r, g, b
-    end)
-    ebAG:SetScript("OnFinished", function()
-        valueContainer:SetBackdropBorderColor(ebTo.r, ebTo.g, ebTo.b, 1)
-        ebR, ebG, ebB = ebTo.r, ebTo.g, ebTo.b
-    end)
+    local AnimateEditBorder = C.MakeBorderAnimator(valueContainer, 0.18)
 
     local valueEdit = CreateFrame("EditBox", nil, valueContainer)
     valueEdit:SetPoint("TOPLEFT",     valueContainer, "TOPLEFT",      2, -2)
@@ -237,10 +211,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     valueEdit:SetScript("OnEscapePressed",  function(eb) eb:ClearFocus(); UpdateFill() end)
     valueEdit:SetScript("OnEditFocusLost",  CommitEdit)
     valueEdit:SetScript("OnEditFocusGained", function(eb)
-        ebAG:Stop()
-        local ac = T().accent
-        valueContainer:SetBackdropBorderColor(ac.r, ac.g, ac.b, 1)
-        ebR, ebG, ebB = ac.r, ac.g, ac.b
+        AnimateEditBorder(true)
         eb:HighlightText()
     end)
     valueEdit:SetScript("OnEnter", function(eb) if not eb:HasFocus() then AnimateEditBorder(true)  end end)
