@@ -9,13 +9,7 @@ function C:CreateSlider(parent, labelText, minVal, maxVal, step, getVal, setVal)
     local row = CreateFrame("Frame", nil, parent)
     row:SetHeight(36)
 
-    local label = row:CreateFontString(nil, "OVERLAY")
-    label:SetPoint("TOPLEFT", row, "TOPLEFT", 0, 1)
-    label:SetJustifyH("LEFT")
-    ApplyFont(label, "small")
-    label:SetText(labelText or "")
-    local color = theme.text.secondary
-    label:SetTextColor(color.r, color.g, color.b, 1)
+    local label = C.CreateLabel(row, labelText)
     row.label = label
 
     local sliderLeftOff = theme.toggleWidth + 20  -- value box + left stepper

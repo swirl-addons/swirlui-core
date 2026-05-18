@@ -1,6 +1,6 @@
 local _, SUI = ...
 local C = SUI.Components
-local T, ApplyFont, SetBackdrop = C.T, C.ApplyFont, C.SetBackdrop
+local T, SetBackdrop = C.T, C.SetBackdrop
 
 function C:CreateToggle(parent, labelText, initialState, onChange)
     local theme         = T()
@@ -15,13 +15,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     local row = CreateFrame("Frame", nil, parent)
     row:SetHeight(30)
 
-    local lbl = row:CreateFontString(nil, "OVERLAY")
-    lbl:SetPoint("TOPLEFT", row, "TOPLEFT", 0, 0)
-    lbl:SetJustifyH("LEFT")
-    ApplyFont(lbl, "small")
-    lbl:SetText(labelText or "")
-    local color = theme.text.secondary
-    lbl:SetTextColor(color.r, color.g, color.b, 1)
+    local lbl = C.CreateLabel(row, labelText)
     row.label = lbl
 
     local toggle = CreateFrame("Frame", nil, row, "BackdropTemplate")

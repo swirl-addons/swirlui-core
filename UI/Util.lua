@@ -16,6 +16,18 @@ function C.ApplyFont(fs, size)
     fs:SetShadowColor(0, 0, 0, 0)
 end
 
+function C.CreateLabel(parent, text)
+    local theme = C.T()
+    local lbl = parent:CreateFontString(nil, "OVERLAY")
+    lbl:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, 1)
+    lbl:SetJustifyH("LEFT")
+    C.ApplyFont(lbl, "small")
+    lbl:SetText(text or "")
+    local tc = theme.text.secondary
+    lbl:SetTextColor(tc.r, tc.g, tc.b, 1)
+    return lbl
+end
+
 function C.SetBackdrop(frame, bg, border)
     local theme = C.T()
     frame:SetBackdrop({
