@@ -13,7 +13,7 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     local ON_X          = TOGGLE_W - KNOB - PAD
 
     local row = CreateFrame("Frame", nil, parent)
-    row:SetHeight(36)
+    row:SetHeight(30)
 
     local lbl = row:CreateFontString(nil, "OVERLAY")
     lbl:SetPoint("TOPLEFT", row, "TOPLEFT", 0, 0)
