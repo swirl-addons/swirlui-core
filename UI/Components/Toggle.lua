@@ -3,14 +3,14 @@ local C = SUI.Components
 local T, SetBackdrop = C.T, C.SetBackdrop
 
 function C:CreateToggle(parent, labelText, initialState, onChange)
-    local theme         = T()
-    local TOGGLE_W      = theme.toggleWidth
-    local TOGGLE_H      = 16
-    local KNOB          = TOGGLE_H - 2
-    local PAD           = 1
-    local ANIM_DUR      = 0.18
-    local OFF_X         = PAD
-    local ON_X          = TOGGLE_W - KNOB - PAD
+    local theme = T()
+    local TOGGLE_W = theme.toggleWidth
+    local TOGGLE_H = 16
+    local KNOB = TOGGLE_H - 2
+    local PAD = 1
+    local ANIM_DUR = 0.18
+    local OFF_X = PAD
+    local ON_X = TOGGLE_W - KNOB - PAD
 
     local row = CreateFrame("Frame", nil, parent)
     row:SetHeight(30)
@@ -27,10 +27,10 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     knob:SetSize(KNOB, KNOB)
     knob:SetPoint("LEFT", toggle, "LEFT", OFF_X, 0)
     knob:SetBackdrop({
-        bgFile   = "Interface\\Buttons\\WHITE8X8",
+        bgFile = "Interface\\Buttons\\WHITE8X8",
         edgeFile = "Interface\\Buttons\\WHITE8X8",
         edgeSize = 1,
-        insets   = { left = -1, right = -1, top = 0, bottom = 0 },
+        insets = { left = -1, right = -1, top = 0, bottom = 0 },
     })
     knob:SetBackdropColor(0, 0, 0, 1)
     knob:SetBackdropBorderColor(0, 0, 0, 1)
@@ -44,16 +44,16 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
     end
 
     local slideGroup = knob:CreateAnimationGroup()
-    local slideAnim  = slideGroup:CreateAnimation("Translation")
+    local slideAnim = slideGroup:CreateAnimation("Translation")
     slideAnim:SetDuration(ANIM_DUR)
     slideAnim:SetSmoothing("OUT")
 
     local colorGroup = toggle:CreateAnimationGroup()
     colorGroup:SetLooping("NONE")
-    local colorAnim  = colorGroup:CreateAnimation("Animation")
+    local colorAnim = colorGroup:CreateAnimation("Animation")
     colorAnim:SetDuration(ANIM_DUR)
     local cFrom = {}
-    local cTo   = {}
+    local cTo = {}
     local knobR, knobG, knobB, knobA = theme.accent.r, theme.accent.g, theme.accent.b, 0.6
 
     colorGroup:SetScript("OnUpdate", function(ag)
@@ -75,11 +75,11 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
         knobR, knobG, knobB, knobA = cTo.kr, cTo.kg, cTo.kb, cTo.ka
     end)
 
-    local state     = initialState or false
+    local state = initialState or false
     local animating = false
 
     local function UpdateColors(toState, instant)
-        local ac  = T().accent
+        local ac = T().accent
         local bgD = T().bg.med
         local bgA = CreateColor(ac.r * 0.5, ac.g * 0.5, ac.b * 0.5, 1)
         if instant then
@@ -107,9 +107,9 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
         if animating and not instant then return end
         animating = true
         state = toState
-        local targetX  = toState and ON_X or OFF_X
+        local targetX = toState and ON_X or OFF_X
         local currentX = select(4, knob:GetPoint()) or OFF_X
-        local delta    = targetX - currentX
+        local delta = targetX - currentX
         UpdateColors(toState, instant)
         if instant or math.abs(delta) < 1 then
             knob:ClearAllPoints()
@@ -144,12 +144,12 @@ function C:CreateToggle(parent, labelText, initialState, onChange)
         end
     end)
 
-    local kbAG   = knob:CreateAnimationGroup()
+    local kbAG = knob:CreateAnimationGroup()
     kbAG:SetLooping("NONE")
     local kbAnim = kbAG:CreateAnimation("Animation")
     kbAnim:SetDuration(0.15)
     local kbFrom = {}
-    local kbTo   = {}
+    local kbTo = {}
     local kbR, kbG, kbB = theme.border.color.r, theme.border.color.g, theme.border.color.b
 
     kbAG:SetScript("OnUpdate", function(ag)
