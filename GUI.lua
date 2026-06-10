@@ -166,7 +166,6 @@ function SUI.Show()
     SUI.frames.userInterfaceContent = ctrl.GetContent("User Interface")
 
     win:EnableKeyboard(true)
-    win:SetPropagateKeyboardInput(true)
     win:SetScript("OnKeyDown", function(self, key)
         if key == "ESCAPE" and self:IsShown() then
             self:SetPropagateKeyboardInput(false)
