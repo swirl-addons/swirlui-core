@@ -1,6 +1,7 @@
 local addonName, SUI = ...
 local C = SUI.Components
 
+SUI.Setup(addonName)
 SUI.InitTheme()
 
 local function T() return SUI.Theme end
