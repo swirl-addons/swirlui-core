@@ -1,5 +1,10 @@
 package-as: SwirlUI
 
+externals:
+    UI:
+        url: https://github.com/lolswirl/SwirlFramework
+        branch: main
+
 manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown
