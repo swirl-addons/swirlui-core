@@ -36,7 +36,7 @@ local function BugSackMinimapButton()
     if _G["SwirlUIBugSackButton"] then return end
     local SwirlUIBugSackButton = CreateFrame("Button", "SwirlUIBugSackButton", UIParent, "BackdropTemplate")
     SwirlUIBugSackButton:SetSize(22, 22)
-    SwirlUIBugSackButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 1.5, 1.5)
+    SwirlUIBugSackButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 2, 2)
     SwirlUIBugSackButton.Text = SwirlUIBugSackButton:CreateFontString(nil, "OVERLAY")
     SwirlUIBugSackButton.Text:SetFont(SUI.Theme.font.path, 16, "OUTLINE")
     SwirlUIBugSackButton.Text:SetPoint("CENTER", SwirlUIBugSackButton, "CENTER", 0, 0)
