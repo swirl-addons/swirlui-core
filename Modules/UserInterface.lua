@@ -122,6 +122,39 @@ local function BuildMouseClickCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildAurasCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Skin Buffs & Debuffs")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.skinAuras
+
+    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyAuraSettings()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    local widthSlider = C:CreateSlider(card, "Width", 16, 64, 1,
+        function() return db.width end,
+        function(v) db.width = v; SUI.ApplyAuraSettings() end)
+    card:AddWidget(widthSlider)
+
+    local heightSlider = C:CreateSlider(card, "Height", 16, 64, 1,
+        function() return db.height end,
+        function(v) db.height = v; SUI.ApplyAuraSettings() end)
+    card:AddWidget(heightSlider)
+
+    local fsSlider = C:CreateSlider(card, "Font Size", 8, 24, 1,
+        function() return db.fontSize end,
+        function(v) db.fontSize = v; SUI.ApplyAuraSettings() end)
+    card:AddWidget(fsSlider)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function CreateUserInterfaceTab()
     local theme  = T()
     local parent = SUI.frames.userInterfaceContent
@@ -138,6 +171,7 @@ local function CreateUserInterfaceTab()
     y = BuildOffsetCard(scrollChild, y, "UI Errors",     "uiErrors")
     y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
     y = BuildMouseClickCard(scrollChild, y)
+    y = BuildAurasCard(scrollChild, y)
 
     scrollChild:Commit(y)
 end
