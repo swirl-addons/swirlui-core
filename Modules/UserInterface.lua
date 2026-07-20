@@ -122,6 +122,24 @@ local function BuildMouseClickCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildActionBarsCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Action Bars")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.skinExtraButtons
+
+    local toggle = C:CreateToggle(card, "Skin Extra Action & Zone Ability Buttons", db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyExtraButtonSkin()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildAurasCard(scrollChild, y)
     local theme = T()
     local card = C:CreateCard(scrollChild, "Skin Buffs & Debuffs")
@@ -171,6 +189,7 @@ local function CreateUserInterfaceTab()
     y = BuildOffsetCard(scrollChild, y, "UI Errors",     "uiErrors")
     y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
     y = BuildMouseClickCard(scrollChild, y)
+    y = BuildActionBarsCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
 
     scrollChild:Commit(y)

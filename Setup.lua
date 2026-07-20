@@ -169,11 +169,12 @@ function ApplyMouseClickSettings()
     end
 end
 
-local function CreateAuraBorder(auraFrame)
+local function CreateAuraBorder(auraFrame, icon)
     if auraFrame.Border then return end
+    icon = icon or auraFrame.Icon
 
     local border = CreateFrame("Frame", nil, auraFrame)
-    border:SetAllPoints(auraFrame.Icon)
+    border:SetAllPoints(icon)
     border:SetFrameLevel(auraFrame:GetFrameLevel() - 1)
     auraFrame.Border = border
 
@@ -291,12 +292,64 @@ function SUI.ApplyAuraSettings()
     end
 end
 
+local function SkinExtraButton(button)
+    local icon = button.Icon or button.icon
+    if not icon then return end
+
+    icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+
+    local normal = button.NormalTexture or (button.GetNormalTexture and button:GetNormalTexture())
+    if normal then normal:SetAlpha(0) end
+    if button.style then button.style:SetAlpha(0) end
+
+    if not button.Border then
+        CreateAuraBorder(button, icon)
+    end
+    button.Border:ClearAllPoints()
+    button.Border:SetPoint("TOPLEFT", icon, "TOPLEFT", -1, 1)
+    button.Border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 1, -1)
+end
+
+local function SkinExtraButtons()
+    if ZoneAbilityFrame then
+        if ZoneAbilityFrame.Style then ZoneAbilityFrame.Style:SetAlpha(0) end
+        if ZoneAbilityFrame.SpellButtonContainer then
+            for _, button in pairs({ZoneAbilityFrame.SpellButtonContainer:GetChildren()}) do
+                SkinExtraButton(button)
+            end
+        end
+    end
+    if ExtraActionButton1 then
+        SkinExtraButton(ExtraActionButton1)
+    end
+end
+
+local extraButtonHooksInstalled = false
+local function SetupExtraButtonHooks()
+    if extraButtonHooksInstalled then return end
+    extraButtonHooksInstalled = true
+    if ZoneAbilityFrame and ZoneAbilityFrame.SpellButtonContainer and ZoneAbilityFrame.SpellButtonContainer.SetContents then
+        hooksecurefunc(ZoneAbilityFrame.SpellButtonContainer, "SetContents", SkinExtraButtons)
+    end
+    if ExtraActionBarFrame then
+        ExtraActionBarFrame:HookScript("OnShow", SkinExtraButtons)
+    end
+end
+
+function SUI.ApplyExtraButtonSkin()
+    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.skinExtraButtons and SwirlUIDB.uiSettings.skinExtraButtons.enabled then
+        SkinExtraButtons()
+        SetupExtraButtonHooks()
+    end
+end
+
 local function ApplyUISettings()
     ApplyChatBubbleSettings()
     ApplyUIErrorsSettings()
     ApplyActionStatusSettings()
     ApplyMouseClickSettings()
     SUI.ApplyAuraSettings()
+    SUI.ApplyExtraButtonSkin()
 end
 
 local function CheckProfileVersionUpdates()
@@ -352,6 +405,7 @@ local function SetupDB()
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         mouseClick = { extraActionButton = true, lfgListFrame = true },
         skinAuras = { enabled = true, width = 37, height = 37, fontSize = 12 },
+        skinExtraButtons = { enabled = true },
     }
 
     if not SwirlUIDB.uiSettings then
