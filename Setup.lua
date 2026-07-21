@@ -296,6 +296,8 @@ local function SkinExtraButton(button)
     local icon = button.Icon or button.icon
     if not icon then return end
 
+    if button.IconMask then button.IconMask:Hide() end
+
     icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 
     local normal = button.NormalTexture or (button.GetNormalTexture and button:GetNormalTexture())
@@ -305,6 +307,7 @@ local function SkinExtraButton(button)
     if not button.Border then
         CreateAuraBorder(button, icon)
     end
+    button.Border:Show()
     button.Border:ClearAllPoints()
     button.Border:SetPoint("TOPLEFT", icon, "TOPLEFT", -1, 1)
     button.Border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 1, -1)
