@@ -36,5 +36,8 @@ Setup.lua
 GUI.lua
 Modules/General.lua
 Modules/UserInterface.lua
+Modules/Skins/Core.lua
+Modules/Skins/RareScanner.lua
+Modules/Skins/WaypointUI.lua
 
 SwirlUI.lua

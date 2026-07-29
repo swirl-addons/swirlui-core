@@ -173,6 +173,39 @@ local function BuildAurasCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildAddonSkinsCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Addon Skins")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.skins
+
+    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.Skins:Run()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    local skins = {
+        { key = "rareScanner", label = "RareScanner" },
+        { key = "waypointUI", label = "WaypointUI (Experimental)" },
+    }
+
+    for _, skin in ipairs(skins) do
+        local skinToggle = C:CreateToggle(card, skin.label, db[skin.key],
+            function(v)
+                db[skin.key] = v
+                if v then SUI.Skins:Rerun(skin.key) end
+                SUI.SettingsChanged = true
+            end)
+        card:AddWidget(skinToggle)
+    end
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function CreateUserInterfaceTab()
     local theme  = T()
     local parent = SUI.frames.userInterfaceContent
@@ -191,6 +224,7 @@ local function CreateUserInterfaceTab()
     y = BuildMouseClickCard(scrollChild, y)
     y = BuildActionBarsCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
+    y = BuildAddonSkinsCard(scrollChild, y)
 
     scrollChild:Commit(y)
 end

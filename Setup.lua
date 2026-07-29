@@ -353,6 +353,7 @@ local function ApplyUISettings()
     ApplyMouseClickSettings()
     SUI.ApplyAuraSettings()
     SUI.ApplyExtraButtonSkin()
+    SUI.Skins:Run()
 end
 
 local function CheckProfileVersionUpdates()
@@ -409,6 +410,7 @@ local function SetupDB()
         mouseClick = { extraActionButton = true, lfgListFrame = true },
         skinAuras = { enabled = true, width = 37, height = 37, fontSize = 12 },
         skinExtraButtons = { enabled = true },
+        skins = { enabled = true, rareScanner = true, waypointUI = false },
     }
 
     if not SwirlUIDB.uiSettings then
