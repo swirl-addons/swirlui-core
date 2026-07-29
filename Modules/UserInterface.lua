@@ -64,6 +64,33 @@ local function BuildChatBubblesCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildZoneTextCard(scrollChild, y)
+    local theme = T()
+    local card  = C:CreateCard(scrollChild, "Zone Text")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.zoneText
+
+    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+        function(v) db.enabled = v; SUI.SettingsChanged = true end)
+    card:AddWidget(toggle)
+
+    local sliders = {
+        { label = "Zone Font Size", key = "zoneFontSize" },
+        { label = "Subzone Font Size", key = "subZoneFontSize" },
+        { label = "PvP Arena Font Size", key = "pvpArenaFontSize" },
+    }
+
+    for _, slider in ipairs(sliders) do
+        local fsSlider = C:CreateSlider(card, slider.label, 8, 40, 1,
+            function() return db[slider.key] end,
+            function(v) db[slider.key] = v end)
+        card:AddWidget(fsSlider)
+    end
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildOffsetCard(scrollChild, y, cardTitle, dbKey)
     local theme = T()
     local card  = C:CreateCard(scrollChild, cardTitle)
@@ -219,6 +246,7 @@ local function CreateUserInterfaceTab()
     local y = theme.padding.small
     y = BuildUIScaleCard(scrollChild, y)
     y = BuildChatBubblesCard(scrollChild, y)
+    y = BuildZoneTextCard(scrollChild, y)
     y = BuildOffsetCard(scrollChild, y, "UI Errors",     "uiErrors")
     y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
     y = BuildMouseClickCard(scrollChild, y)

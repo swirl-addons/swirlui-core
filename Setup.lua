@@ -134,6 +134,15 @@ local function ApplyChatBubbleSettings()
     end
 end
 
+local function ApplyZoneTextSettings()
+    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.zoneText.enabled then
+        local settings = SwirlUIDB.uiSettings.zoneText
+        ZoneTextString:SetFont(SUI.Theme.font.path, settings.zoneFontSize, "OUTLINE")
+        SubZoneTextString:SetFont(SUI.Theme.font.path, settings.subZoneFontSize, "OUTLINE")
+        PVPArenaTextString:SetFont(SUI.Theme.font.path, settings.pvpArenaFontSize, "OUTLINE")
+    end
+end
+
 local function ApplyUIErrorsSettings()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.uiErrors.enabled then
         UIErrorsFrame:SetFont(SUI.Theme.font.path, SwirlUIDB.uiSettings.uiErrors.fontSize, "OUTLINE")
@@ -348,6 +357,7 @@ end
 
 local function ApplyUISettings()
     ApplyChatBubbleSettings()
+    ApplyZoneTextSettings()
     ApplyUIErrorsSettings()
     ApplyActionStatusSettings()
     ApplyMouseClickSettings()
@@ -405,6 +415,7 @@ local function SetupDB()
     local defaultUiSettings = {
         silence = false,
         chatBubbles = { enabled = true, fontSize = 8 },
+        zoneText = { enabled = true, zoneFontSize = 25, subZoneFontSize = 24, pvpArenaFontSize = 22 },
         uiErrors = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         mouseClick = { extraActionButton = true, lfgListFrame = true },
