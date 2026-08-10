@@ -1,38 +1,28 @@
 # swirlui core
 
-a comprehensive addon management and ui customization tool for world of warcraft, designed to enhance [swirl ui](https://uipacks.wago.io/pack/swirl-ui) with profile importing and advanced interface tweaks.
+a comprehensive ui customization tool for world of warcraft, designed to enhance [swirl ui](https://uipacks.wago.io/pack/swirl-ui) with advanced interface tweaks.
 
 ## features
 
-### profile management
-- **one-click profile importing** for popular addons not included in wago installer
-- **automated profile detection** with version tracking
-- **bulk import/apply operations** for efficient setup
-- **real-time status monitoring** of addon configurations
-
 ### ui enhancements
+- **ui scale slider** with quick presets
 - **chat bubble font resizing** with customizable settings
+- **zone/subzone/pvp text** font size controls
 - **action status frame reskinning** with positioning controls
 - **error frame customization** with moveable positioning
-- **quest objective tracker font** optimization
-- **texture removal** from tracker frames for minimal aesthetic
-- **chat text shadow removal** for cleaner chat appearance
+- **buffs & debuffs (aura) skinning** with adjustable icon size and font
+- **extra action & zone ability button skinning**
+- **mouse click passthrough** for extra action button and LFG list frame
+- **addon skinning engine** for RareScanner, WaypointUI, and OPie
 - **bugsack minimap integration** with button management
-- **durability datatext** with repair cost tooltips on minimap
-- **mail icons** with info on minimap
-- **abstractframework integration** for consistent theming
+- **mail icon** with sender info on minimap
 
 ## usage
 
 ### quick setup
 ```
-/swirlui - opens main interface
+/swirlui, /sui, or /swirl - opens main interface
 ```
-
-### profile workflow
-1. **import profiles** - click individual addon profiles or use "import all"
-2. **apply settings** - use "apply all profiles" to activate imported configurations
-3. **customize ui** - adjust fonts, positions, and scaling in options tab
 
 ## installation
 
