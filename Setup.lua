@@ -4,24 +4,6 @@ local PLAYER_CLASS = select(2, UnitClass("player"))
 local PLAYER_CLASS_COLOR = RAID_CLASS_COLORS[PLAYER_CLASS]
 local PLAYER_CLASS_COLOR_HEX = CreateColor(PLAYER_CLASS_COLOR.r, PLAYER_CLASS_COLOR.g, PLAYER_CLASS_COLOR.b):GenerateHexColor()
 
-local function DetailsRemoveShadows()
-    if not C_AddOns.IsAddOnLoaded("Details") then return end
-    
-    for i = 1, 3 do
-        local baseFrame = _G["DetailsBaseFrame" .. i]
-        local windowFrame = _G["Details_WindowFrame" .. i]
-        local attributeString = _G["DetailsAttributeStringInstance" .. i]
-        
-        if baseFrame and windowFrame and attributeString then
-            attributeString:SetShadowColor(0, 0, 0, 0)
-        end
-    end
-end
-
-local function AddOnSetups()
-    DetailsRemoveShadows()
-end
-
 local function BugSackMinimapButton()
     if not C_AddOns.IsAddOnLoaded("BugSack") then return end
     local LDB = LibStub("LibDataBroker-1.1", true)
@@ -447,7 +429,6 @@ function SUI:Initialize()
     SetupDB()
 
     ApplyUISettings()
-    AddOnSetups()
     MinimapData()
 
     CheckProfileVersionUpdates()
