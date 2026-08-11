@@ -1,4 +1,4 @@
-## Interface: 120007
+## Interface: 120100
 
 ## Title: |cff02fd98Swirl|rUI Core
 ## Notes: Custom configs made for |cff02fd98Swirl|rUI
