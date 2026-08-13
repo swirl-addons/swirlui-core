@@ -161,13 +161,13 @@ function ApplyMouseClickSettings()
 end
 
 local function CreateAuraBorder(auraFrame, icon)
-    if auraFrame.Border then return end
+    if auraFrame.SwirlBorder then return end
     icon = icon or auraFrame.Icon
 
     local border = CreateFrame("Frame", nil, auraFrame)
     border:SetAllPoints(icon)
     border:SetFrameLevel(auraFrame:GetFrameLevel() - 1)
-    auraFrame.Border = border
+    auraFrame.SwirlBorder = border
 
     local borders = {
         {points = {"TOPLEFT", "TOPRIGHT"}, size = "Height"},
@@ -213,15 +213,15 @@ local function SkinAuras(auraFrame)
         auraFrame.BuffBorder:SetTexture(nil)
     end
 
-    if not auraFrame.Border then
+    if not auraFrame.SwirlBorder then
         CreateAuraBorder(auraFrame)
     end
 
     local width, height = auraFrame:GetSize()
     if width and height and width > 0 and height > 0 then
-        auraFrame.Border:ClearAllPoints()
-        auraFrame.Border:SetPoint("TOPLEFT", auraFrame.Icon, "TOPLEFT", -1, 1)
-        auraFrame.Border:SetPoint("BOTTOMRIGHT", auraFrame.Icon, "BOTTOMRIGHT", 1, -1)
+        auraFrame.SwirlBorder:ClearAllPoints()
+        auraFrame.SwirlBorder:SetPoint("TOPLEFT", auraFrame.Icon, "TOPLEFT", -1, 1)
+        auraFrame.SwirlBorder:SetPoint("BOTTOMRIGHT", auraFrame.Icon, "BOTTOMRIGHT", 1, -1)
     end
 
     local fontSize = auraSettings.fontSize or 12
@@ -295,13 +295,13 @@ local function SkinExtraButton(button)
     if normal then normal:SetAlpha(0) end
     if button.style then button.style:SetAlpha(0) end
 
-    if not button.Border then
+    if not button.SwirlBorder then
         CreateAuraBorder(button, icon)
     end
-    button.Border:Show()
-    button.Border:ClearAllPoints()
-    button.Border:SetPoint("TOPLEFT", icon, "TOPLEFT", -1, 1)
-    button.Border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 1, -1)
+    button.SwirlBorder:Show()
+    button.SwirlBorder:ClearAllPoints()
+    button.SwirlBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -1, 1)
+    button.SwirlBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 1, -1)
 end
 
 local function SkinExtraButtons()
