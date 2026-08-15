@@ -121,6 +121,7 @@ local function ApplyZoneTextSettings()
         local settings = SwirlUIDB.uiSettings.zoneText
         ZoneTextString:SetFont(SUI.Theme.font.path, settings.zoneFontSize, "OUTLINE")
         SubZoneTextString:SetFont(SUI.Theme.font.path, settings.subZoneFontSize, "OUTLINE")
+        PVPInfoTextString:SetFont(SUI.Theme.font.path, settings.pvpInfoFontSize, "OUTLINE")
         PVPArenaTextString:SetFont(SUI.Theme.font.path, settings.pvpArenaFontSize, "OUTLINE")
     end
 end
@@ -274,7 +275,7 @@ local function SetupDB()
     local defaultUiSettings = {
         silence = false,
         chatBubbles = { enabled = true, fontSize = 8 },
-        zoneText = { enabled = true, zoneFontSize = 25, subZoneFontSize = 24, pvpArenaFontSize = 22 },
+        zoneText = { enabled = true, zoneFontSize = 25, subZoneFontSize = 24, pvpInfoFontSize = 22, pvpArenaFontSize = 22 },
         uiErrors = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         mouseClick = { extraActionButton = true, lfgListFrame = true },

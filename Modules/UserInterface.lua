@@ -78,6 +78,7 @@ local function BuildZoneTextCard(scrollChild, y)
     local sliders = {
         { label = "Zone Font Size", key = "zoneFontSize" },
         { label = "Subzone Font Size", key = "subZoneFontSize" },
+        { label = "PvP Info Font Size", key = "pvpInfoFontSize" },
         { label = "PvP Arena Font Size", key = "pvpArenaFontSize" },
     }
 
