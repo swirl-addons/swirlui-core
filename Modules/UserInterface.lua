@@ -177,24 +177,24 @@ local function BuildAurasCard(scrollChild, y)
     local toggle = C:CreateToggle(card, "Enable", db.enabled,
         function(v)
             db.enabled = v
-            SUI.ApplyAuraSettings()
+            SUI.Auras.Apply()
             SUI.SettingsChanged = true
         end)
     card:AddWidget(toggle)
 
     local widthSlider = C:CreateSlider(card, "Width", 16, 64, 1,
         function() return db.width end,
-        function(v) db.width = v; SUI.ApplyAuraSettings() end)
+        function(v) db.width = v; SUI.Auras.Apply() end)
     card:AddWidget(widthSlider)
 
     local heightSlider = C:CreateSlider(card, "Height", 16, 64, 1,
         function() return db.height end,
-        function(v) db.height = v; SUI.ApplyAuraSettings() end)
+        function(v) db.height = v; SUI.Auras.Apply() end)
     card:AddWidget(heightSlider)
 
     local fsSlider = C:CreateSlider(card, "Font Size", 8, 24, 1,
         function() return db.fontSize end,
-        function(v) db.fontSize = v; SUI.ApplyAuraSettings() end)
+        function(v) db.fontSize = v; SUI.Auras.Apply() end)
     card:AddWidget(fsSlider)
 
     return y + card:GetHeight() + theme.padding.small
