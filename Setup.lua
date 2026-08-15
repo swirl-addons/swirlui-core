@@ -116,6 +116,39 @@ local function ApplyChatBubbleSettings()
     end
 end
 
+local function RemoveFontShadow(region)
+    if not region or not region.SetShadowOffset then return end
+    region:SetShadowOffset(0, 0)
+    region:SetShadowColor(0, 0, 0, 0)
+end
+
+local function RemoveChatFontShadows()
+    for i = 1, NUM_CHAT_WINDOWS do
+        local chat = _G["ChatFrame" .. i]
+        if chat then
+            RemoveFontShadow(chat)
+            RemoveFontShadow(chat.editBox)
+            local tab = _G["ChatFrame" .. i .. "Tab"]
+            if tab then RemoveFontShadow(tab.Text) end
+        end
+    end
+end
+
+local chatShadowHooksInstalled = false
+local function SetupChatShadowHooks()
+    if chatShadowHooksInstalled then return end
+    chatShadowHooksInstalled = true
+    hooksecurefunc("FCF_OpenNewWindow", RemoveChatFontShadows)
+    hooksecurefunc("FCF_OpenTemporaryWindow", RemoveChatFontShadows)
+end
+
+function SUI.ApplyChatFontSettings()
+    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.chatFont.removeShadow then
+        RemoveChatFontShadows()
+        SetupChatShadowHooks()
+    end
+end
+
 local function ApplyZoneTextSettings()
     if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.zoneText.enabled then
         local settings = SwirlUIDB.uiSettings.zoneText
@@ -217,6 +250,7 @@ end
 
 local function ApplyUISettings()
     ApplyChatBubbleSettings()
+    SUI.ApplyChatFontSettings()
     ApplyZoneTextSettings()
     ApplyUIErrorsSettings()
     ApplyActionStatusSettings()
@@ -275,6 +309,7 @@ local function SetupDB()
     local defaultUiSettings = {
         silence = false,
         chatBubbles = { enabled = true, fontSize = 8 },
+        chatFont = { removeShadow = true },
         zoneText = { enabled = true, zoneFontSize = 25, subZoneFontSize = 24, pvpInfoFontSize = 22, pvpArenaFontSize = 22 },
         uiErrors = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },

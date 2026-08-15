@@ -64,6 +64,24 @@ local function BuildChatBubblesCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildChatCard(scrollChild, y)
+    local theme = T()
+    local card  = C:CreateCard(scrollChild, "Chat")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.chatFont
+
+    local toggle = C:CreateToggle(card, "Remove Font Shadows", db.removeShadow,
+        function(v)
+            db.removeShadow = v
+            SUI.ApplyChatFontSettings()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildZoneTextCard(scrollChild, y)
     local theme = T()
     local card  = C:CreateCard(scrollChild, "Zone Text")
@@ -248,6 +266,7 @@ local function CreateUserInterfaceTab()
     local y = theme.padding.small
     y = BuildUIScaleCard(scrollChild, y)
     y = BuildChatBubblesCard(scrollChild, y)
+    y = BuildChatCard(scrollChild, y)
     y = BuildZoneTextCard(scrollChild, y)
     y = BuildOffsetCard(scrollChild, y, "UI Errors",     "uiErrors")
     y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
