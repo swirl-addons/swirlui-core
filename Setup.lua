@@ -194,6 +194,55 @@ function ApplyMouseClickSettings()
     end
 end
 
+local function SkinLFGFont(fs)
+    if not fs then return end
+    local _, size = fs:GetFont()
+    fs:SetFont(SUI.Theme.font.path, size or SUI.Theme.font.size.normal, "OUTLINE")
+    RemoveFontShadow(fs)
+end
+
+local lfgFontHookInstalled = false
+local function SetupLFGFontHooks()
+    if lfgFontHookInstalled or not LFGListSearchEntry_Update then return end
+    lfgFontHookInstalled = true
+    hooksecurefunc("LFGListSearchEntry_Update", function(entry)
+        SkinLFGFont(entry.Name)
+        SkinLFGFont(entry.ActivityName)
+        SkinLFGFont(entry.Playstyle)
+    end)
+end
+
+local function SkinLFGApplicationViewer()
+    local viewer = LFGListFrame and LFGListFrame.ApplicationViewer
+    if not viewer then return end
+
+    SkinLFGFont(viewer.EntryName)
+    if viewer.DescriptionFrame then SkinLFGFont(viewer.DescriptionFrame.Text) end
+    if viewer.UnempoweredCover then SkinLFGFont(viewer.UnempoweredCover.Label) end
+
+    local headers = {
+        viewer.NameColumnHeader,
+        viewer.RoleColumnHeader,
+        viewer.ItemLevelColumnHeader,
+        LFGApplicationViewerRatingColumnHeader,
+    }
+    for i = 1, 4 do
+        local header = headers[i]
+        if header then SkinLFGFont(header.Label) end
+    end
+end
+
+function SUI.ApplyLFGFontSkin()
+    if SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.lfgFont and SwirlUIDB.uiSettings.lfgFont.enabled then
+        SetupLFGFontHooks()
+        SkinLFGApplicationViewer()
+        local panel = LFGListFrame and LFGListFrame.SearchPanel
+        if panel and panel:IsShown() and LFGListSearchPanel_UpdateResults then
+            LFGListSearchPanel_UpdateResults(panel)
+        end
+    end
+end
+
 local function SkinExtraButton(button)
     local icon = button.Icon or button.icon
     if not icon then return end
@@ -257,6 +306,7 @@ local function ApplyUISettings()
     ApplyMouseClickSettings()
     SUI.Auras.Apply()
     SUI.ApplyExtraButtonSkin()
+    SUI.ApplyLFGFontSkin()
     SUI.Skins:Run()
 end
 
@@ -316,6 +366,7 @@ local function SetupDB()
         mouseClick = { extraActionButton = true, lfgListFrame = true },
         skinAuras = { enabled = true, width = 37, height = 37, fontSize = 12 },
         skinExtraButtons = { enabled = true },
+        lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true },
     }
 

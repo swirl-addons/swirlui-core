@@ -186,6 +186,24 @@ local function BuildActionBarsCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildGroupFinderCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Group Finder")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.lfgFont
+
+    local toggle = C:CreateToggle(card, "Skin Search Result Fonts", db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyLFGFontSkin()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildAurasCard(scrollChild, y)
     local theme = T()
     local card = C:CreateCard(scrollChild, "Skin Buffs & Debuffs")
@@ -272,6 +290,7 @@ local function CreateUserInterfaceTab()
     y = BuildOffsetCard(scrollChild, y, "Action Status", "actionStatus")
     y = BuildMouseClickCard(scrollChild, y)
     y = BuildActionBarsCard(scrollChild, y)
+    y = BuildGroupFinderCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
     y = BuildAddonSkinsCard(scrollChild, y)
 
