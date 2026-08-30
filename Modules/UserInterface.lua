@@ -48,13 +48,11 @@ local function BuildChatBubblesCard(scrollChild, y)
     local card  = C:CreateCard(scrollChild, "Chat Bubbles")
     scrollChild:PlaceCard(card, y)
 
-    local toggle = C:CreateToggle(card, "Enable",
-        SwirlUIDB.uiSettings.chatBubbles.enabled,
+    card:AddHeaderToggle(SwirlUIDB.uiSettings.chatBubbles.enabled,
         function(v)
             SwirlUIDB.uiSettings.chatBubbles.enabled = v
             SUI.SettingsChanged = true
         end)
-    card:AddWidget(toggle)
 
     local fsSlider = C:CreateSlider(card, "Font Size", 2, 24, 1,
         function() return SwirlUIDB.uiSettings.chatBubbles.fontSize end,
@@ -89,9 +87,8 @@ local function BuildZoneTextCard(scrollChild, y)
 
     local db = SwirlUIDB.uiSettings.zoneText
 
-    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+    card:AddHeaderToggle(db.enabled,
         function(v) db.enabled = v; SUI.SettingsChanged = true end)
-    card:AddWidget(toggle)
 
     local sliders = {
         { label = "Zone Font Size", key = "zoneFontSize" },
@@ -117,9 +114,8 @@ local function BuildOffsetCard(scrollChild, y, cardTitle, dbKey)
 
     local db = SwirlUIDB.uiSettings[dbKey]
 
-    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+    card:AddHeaderToggle(db.enabled,
         function(v) db.enabled = v; SUI.SettingsChanged = true end)
-    card:AddWidget(toggle)
 
     local fsSlider = C:CreateSlider(card, "Font Size", 8, 24, 1,
         function() return db.fontSize end,
@@ -211,13 +207,12 @@ local function BuildAurasCard(scrollChild, y)
 
     local db = SwirlUIDB.uiSettings.skinAuras
 
-    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+    card:AddHeaderToggle(db.enabled,
         function(v)
             db.enabled = v
             SUI.Auras.Apply()
             SUI.SettingsChanged = true
         end)
-    card:AddWidget(toggle)
 
     local widthSlider = C:CreateSlider(card, "Width", 16, 64, 1,
         function() return db.width end,
@@ -244,13 +239,12 @@ local function BuildAddonSkinsCard(scrollChild, y)
 
     local db = SwirlUIDB.uiSettings.skins
 
-    local toggle = C:CreateToggle(card, "Enable", db.enabled,
+    card:AddHeaderToggle(db.enabled,
         function(v)
             db.enabled = v
             SUI.Skins:Run()
             SUI.SettingsChanged = true
         end)
-    card:AddWidget(toggle)
 
     local skins = {
         { key = "rareScanner", label = "RareScanner" },
