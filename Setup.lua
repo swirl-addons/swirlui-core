@@ -307,6 +307,7 @@ local function ApplyUISettings()
     SUI.Auras.Apply()
     SUI.ApplyExtraButtonSkin()
     SUI.ApplyLFGFontSkin()
+    SUI.ApplyAutoInviteSettings()
     SUI.Skins:Run()
 end
 
@@ -368,6 +369,7 @@ local function SetupDB()
         skinExtraButtons = { enabled = true },
         lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true },
+        autoInvite = { enabled = true, keywords = "inv", guildOnly = true, convertToRaid = true, acceptGuildInvites = false, acceptBNetInvites = false },
     }
 
     if not SwirlUIDB.uiSettings then

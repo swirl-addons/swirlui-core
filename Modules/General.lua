@@ -31,6 +31,63 @@ local function CreateGeneralTab()
 
     y = y + genCard:GetHeight() + theme.padding.small
 
+    local db = SwirlUIDB.uiSettings.autoInvite
+    local inviteCard = C:CreateCard(scrollChild, "Invites")
+    scrollChild:PlaceCard(inviteCard, y)
+
+    inviteCard:AddSectionHeader("Invite Others", true)
+
+    local inviteToggle = C:CreateToggle(inviteCard, "On whisper keyword", db.enabled,
+        function(val)
+            db.enabled = val
+            SUI.ApplyAutoInviteSettings()
+            SUI.SettingsChanged = true
+        end)
+    inviteCard:AddWidget(inviteToggle)
+
+    local keywordBox = C:CreateEditBox(inviteCard, "Keywords (comma separated)", db.keywords,
+        function(val)
+            db.keywords = val
+            SUI.AutoInvite.InvalidateKeywordCache()
+            SUI.SettingsChanged = true
+        end)
+    inviteCard:AddWidget(keywordBox)
+
+    local guildOnlyToggle = C:CreateToggle(inviteCard, "Guild members only", db.guildOnly,
+        function(val)
+            db.guildOnly = val
+            SUI.ApplyAutoInviteSettings()
+            SUI.SettingsChanged = true
+        end)
+    inviteCard:AddWidget(guildOnlyToggle)
+
+    local convertToggle = C:CreateToggle(inviteCard, "Convert to Raid when Party is full", db.convertToRaid,
+        function(val)
+            db.convertToRaid = val
+            SUI.SettingsChanged = true
+        end)
+    inviteCard:AddWidget(convertToggle)
+
+    inviteCard:AddSectionHeader("Accept Invites")
+
+    local acceptToggle = C:CreateToggle(inviteCard, "From Guild members", db.acceptGuildInvites,
+        function(val)
+            db.acceptGuildInvites = val
+            SUI.ApplyAutoInviteSettings()
+            SUI.SettingsChanged = true
+        end)
+    inviteCard:AddWidget(acceptToggle)
+
+    local acceptBNetToggle = C:CreateToggle(inviteCard, "From Battle.net friends", db.acceptBNetInvites,
+        function(val)
+            db.acceptBNetInvites = val
+            SUI.ApplyAutoInviteSettings()
+            SUI.SettingsChanged = true
+        end)
+    inviteCard:AddWidget(acceptBNetToggle)
+
+    y = y + inviteCard:GetHeight() + theme.padding.small
+
 end
 
 function SUI.BuildGeneralTab()

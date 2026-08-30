@@ -36,6 +36,7 @@ Setup.lua
 GUI.lua
 Modules/Auras.lua
 Modules/General.lua
+Modules/AutoInvite.lua
 Modules/UserInterface.lua
 Modules/Skins/Core.lua
 Modules/Skins/RareScanner.lua
