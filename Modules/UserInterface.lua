@@ -232,6 +232,27 @@ local function BuildAurasCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildEllesmereCard(scrollChild, y)
+    if not C_AddOns.IsAddOnLoaded("EllesmereUIUnitFrames") then return y end
+
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "EllesmereUI Unit Frames")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.ellesmere
+
+    local toggle = C:CreateToggle(card, "Power Text Above Cast Bar (Target & Boss)",
+        db.powerTextAboveCastbar,
+        function(v)
+            db.powerTextAboveCastbar = v
+            SUI.ApplyEllesmereSettings()
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildAddonSkinsCard(scrollChild, y)
     local theme = T()
     local card = C:CreateCard(scrollChild, "Addon Skins")
@@ -286,6 +307,7 @@ local function CreateUserInterfaceTab()
     y = BuildActionBarsCard(scrollChild, y)
     y = BuildGroupFinderCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
+    y = BuildEllesmereCard(scrollChild, y)
     y = BuildAddonSkinsCard(scrollChild, y)
 
     scrollChild:Commit(y)

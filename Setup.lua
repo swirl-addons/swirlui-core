@@ -308,6 +308,7 @@ local function ApplyUISettings()
     SUI.ApplyExtraButtonSkin()
     SUI.ApplyLFGFontSkin()
     SUI.ApplyAutoInviteSettings()
+    SUI.ApplyEllesmereSettings()
     SUI.Skins:Run()
 end
 
@@ -369,6 +370,7 @@ local function SetupDB()
         skinExtraButtons = { enabled = true },
         lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true },
+        ellesmere = { powerTextAboveCastbar = false },
         autoInvite = { enabled = true, keywords = "inv", guildOnly = true, convertToRaid = true, acceptGuildInvites = false, acceptBNetInvites = false },
     }
 
