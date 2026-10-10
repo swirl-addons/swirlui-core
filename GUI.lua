@@ -288,6 +288,8 @@ SLASH_SWIRLUI3 = "/swirl"
 SlashCmdList["SWIRLUI"] = function(msg)
     if msg == "export" then
         SUI.ShowExport()
+    elseif msg == "bind" then
+        SUI.ToggleBindMode()
     elseif msg == "toast" then
         SUI.Components.ShowToast("SwirlUI\nTest toast message", 3)
     elseif msg == "confirm" then
