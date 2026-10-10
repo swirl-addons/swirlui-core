@@ -115,7 +115,7 @@ function Indicator:SetCooldownDuration(duration, isRecharge)
     end
     self.cd:SetDrawEdge(isRecharge and true or false)
     self.cd:SetDrawSwipe(not isRecharge)
-    self.cd:SetCooldownDuration(duration)
+    self.cd:SetCooldownFromDurationObject(duration)
     self.cd:Show()
 end
 
