@@ -370,7 +370,7 @@ local function SetupDB()
         skinExtraButtons = { enabled = true },
         lfgFont = { enabled = true },
         skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true },
-        ellesmere = { powerTextAboveCastbar = false },
+        ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true },
         autoInvite = { enabled = true, keywords = "inv", guildOnly = true, convertToRaid = true, acceptGuildInvites = false, acceptBNetInvites = false },
     }
 

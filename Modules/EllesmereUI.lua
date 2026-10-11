@@ -79,8 +79,27 @@ function SUI.ApplyEllesmereSettings()
     ApplyWhenReady()
 end
 
+local localeHooked = false
+
+-- eui's tooltip target line looks its label and "You" up through EllesmereUI.L on every pass
+local function HookTooltipTarget()
+    if localeHooked or not (EllesmereUI and EllesmereUI.L) then return end
+    localeHooked = true
+
+    local L = EllesmereUI.L
+    EllesmereUI.L = function(s)
+        local settings = SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.ellesmere
+        if settings and settings.tooltipTargetLine and not issecretvalue(s) then
+            if s == "Targeting:" then return "Target:" end
+            if s == "You" then return "|cffff4400YOU|r" end
+        end
+        return L(s)
+    end
+end
+
 local watcher = CreateFrame("Frame")
 watcher:RegisterEvent("PLAYER_ENTERING_WORLD")
 watcher:SetScript("OnEvent", function()
+    HookTooltipTarget()
     ApplyWhenReady()
 end)

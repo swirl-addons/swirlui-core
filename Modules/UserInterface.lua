@@ -233,22 +233,36 @@ local function BuildAurasCard(scrollChild, y)
 end
 
 local function BuildEllesmereCard(scrollChild, y)
-    if not C_AddOns.IsAddOnLoaded("EllesmereUIUnitFrames") then return y end
+    local unitFrames = C_AddOns.IsAddOnLoaded("EllesmereUIUnitFrames")
+    local blizzardSkin = C_AddOns.IsAddOnLoaded("EllesmereUIBlizzardSkin")
+    if not unitFrames and not blizzardSkin then return y end
 
     local theme = T()
-    local card = C:CreateCard(scrollChild, "EllesmereUI Unit Frames")
+    local card = C:CreateCard(scrollChild, "EllesmereUI")
     scrollChild:PlaceCard(card, y)
 
     local db = SwirlUIDB.uiSettings.ellesmere
 
-    local toggle = C:CreateToggle(card, "Power Text Above Cast Bar (Target & Boss)",
-        db.powerTextAboveCastbar,
-        function(v)
-            db.powerTextAboveCastbar = v
-            SUI.ApplyEllesmereSettings()
-            SUI.SettingsChanged = true
-        end)
-    card:AddWidget(toggle)
+    if unitFrames then
+        local toggle = C:CreateToggle(card, "Power Text Above Cast Bar (Target & Boss)",
+            db.powerTextAboveCastbar,
+            function(v)
+                db.powerTextAboveCastbar = v
+                SUI.ApplyEllesmereSettings()
+                SUI.SettingsChanged = true
+            end)
+        card:AddWidget(toggle)
+    end
+
+    if blizzardSkin then
+        local toggle = C:CreateToggle(card, "Tooltip Target Line as \"Target: YOU\"",
+            db.tooltipTargetLine,
+            function(v)
+                db.tooltipTargetLine = v
+                SUI.SettingsChanged = true
+            end)
+        card:AddWidget(toggle)
+    end
 
     return y + card:GetHeight() + theme.padding.small
 end
