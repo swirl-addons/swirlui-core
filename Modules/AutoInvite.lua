@@ -42,7 +42,10 @@ end
 local function IsInSameGuild(playerName)
     if not playerName then return false end
     if not playerName:find("-") then
-        playerName = playerName .. "-" .. select(2, UnitFullName("player"))
+        -- realm isn't always available yet right after login
+        local realm = select(2, UnitFullName("player")) or GetNormalizedRealmName()
+        if not realm then return false end
+        playerName = playerName .. "-" .. realm
     end
     for i = 1, GetNumGuildMembers() do
         local name = GetGuildRosterInfo(i)
