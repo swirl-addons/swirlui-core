@@ -290,6 +290,9 @@ SlashCmdList["SWIRLUI"] = function(msg)
         SUI.ShowExport()
     elseif msg == "bind" then
         SUI.ToggleBindMode()
+    elseif msg == "bars" then
+        local shown = SUI.ToggleMouseoverBars()
+        print(string.format("%s Mouseover bars %s.", SUI.Header, shown and "forced visible" or "back to normal"))
     elseif msg == "toast" then
         SUI.Components.ShowToast("SwirlUI\nTest toast message", 3)
     elseif msg == "confirm" then
