@@ -267,6 +267,24 @@ local function BuildEllesmereCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildTooltipCard(scrollChild, y)
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Tooltip")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.tooltip
+
+    local toggle = C:CreateToggle(card, "Guild Rank as \"Guild [Rank]\"",
+        db.guildRank,
+        function(v)
+            db.guildRank = v
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(toggle)
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildZenPilgrimageCard(scrollChild, y)
     if select(2, UnitClass("player")) ~= "MONK" then return y end
 
@@ -356,6 +374,7 @@ local function CreateUserInterfaceTab()
     y = BuildGroupFinderCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
     y = BuildEllesmereCard(scrollChild, y)
+    y = BuildTooltipCard(scrollChild, y)
     y = BuildZenPilgrimageCard(scrollChild, y)
     y = BuildAddonSkinsCard(scrollChild, y)
 
