@@ -267,6 +267,40 @@ local function BuildEllesmereCard(scrollChild, y)
     return y + card:GetHeight() + theme.padding.small
 end
 
+local function BuildZenPilgrimageCard(scrollChild, y)
+    if select(2, UnitClass("player")) ~= "MONK" then return y end
+
+    local theme = T()
+    local card = C:CreateCard(scrollChild, "Zen Pilgrimage Cooldown")
+    scrollChild:PlaceCard(card, y)
+
+    local db = SwirlUIDB.uiSettings.zenPilgrimage
+
+    card:AddHeaderToggle(db.enabled,
+        function(v)
+            db.enabled = v
+            SUI.ApplyZenPilgrimage()
+            SUI.SettingsChanged = true
+        end)
+
+    local sliders = {
+        { key = "size", label = "Size", min = 16, max = 128 },
+        { key = "offsetX", label = "X Offset", min = -1000, max = 1000 },
+        { key = "offsetY", label = "Y Offset", min = -600, max = 600 },
+    }
+    for _, slider in ipairs(sliders) do
+        local widget = C:CreateSlider(card, slider.label, slider.min, slider.max, 1,
+            function() return db[slider.key] end,
+            function(v)
+                db[slider.key] = v
+                SUI.ApplyZenPilgrimage()
+            end)
+        card:AddWidget(widget)
+    end
+
+    return y + card:GetHeight() + theme.padding.small
+end
+
 local function BuildAddonSkinsCard(scrollChild, y)
     local theme = T()
     local card = C:CreateCard(scrollChild, "Addon Skins")
@@ -322,6 +356,7 @@ local function CreateUserInterfaceTab()
     y = BuildGroupFinderCard(scrollChild, y)
     y = BuildAurasCard(scrollChild, y)
     y = BuildEllesmereCard(scrollChild, y)
+    y = BuildZenPilgrimageCard(scrollChild, y)
     y = BuildAddonSkinsCard(scrollChild, y)
 
     scrollChild:Commit(y)

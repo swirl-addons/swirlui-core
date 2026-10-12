@@ -41,6 +41,7 @@ Modules/UserInterface.lua
 Modules/EllesmereUI.lua
 Modules/Bind.lua
 Modules/ActionBars.lua
+Modules/ZenPilgrimage.lua
 Modules/Skins/Core.lua
 Modules/Skins/RareScanner.lua
 Modules/Skins/WaypointUI.lua
