@@ -1,7 +1,13 @@
 local _, SUI = ...
 
 local GROUP_CHAT = { PARTY = true, RAID = true, INSTANCE_CHAT = true }
-local ROLE_ICONS = { TANK = INLINE_TANK_ICON, HEALER = INLINE_HEALER_ICON, DAMAGER = INLINE_DAMAGER_ICON }
+local LSM = LibStub("LibSharedMedia-3.0")
+
+local function Icon(name)
+    return "|T" .. LSM:Fetch("background", name) .. ":0|t"
+end
+
+local ROLE_ICONS = { TANK = Icon("Tank"), HEALER = Icon("Healer"), DAMAGER = Icon("DPS") }
 
 local function Enabled()
     local settings = SwirlUIDB and SwirlUIDB.uiSettings and SwirlUIDB.uiSettings.chatRoleIcons
