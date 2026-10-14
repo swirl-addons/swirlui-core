@@ -362,6 +362,7 @@ local function SetupDB()
         silence = false,
         chatBubbles = { enabled = true, fontSize = 8 },
         chatFont = { removeShadow = true },
+        chatRoleIcons = { enabled = true },
         zoneText = { enabled = true, zoneFontSize = 25, subZoneFontSize = 24, pvpInfoFontSize = 22, pvpArenaFontSize = 22 },
         uiErrors = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },
         actionStatus = { enabled = true, fontSize = 12, offsetX = 0, offsetY = 200 },

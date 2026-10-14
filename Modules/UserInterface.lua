@@ -77,6 +77,14 @@ local function BuildChatCard(scrollChild, y)
         end)
     card:AddWidget(toggle)
 
+    local roleIcons = SwirlUIDB.uiSettings.chatRoleIcons
+    local roleToggle = C:CreateToggle(card, "Role Icons in Group Chat", roleIcons.enabled,
+        function(v)
+            roleIcons.enabled = v
+            SUI.SettingsChanged = true
+        end)
+    card:AddWidget(roleToggle)
+
     return y + card:GetHeight() + theme.padding.small
 end
 
