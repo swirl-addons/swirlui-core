@@ -345,6 +345,7 @@ local function BuildAddonSkinsCard(scrollChild, y)
         { key = "rareScanner", label = "RareScanner" },
         { key = "waypointUI", label = "WaypointUI (Experimental)" },
         { key = "opie", label = "OPie Ring Buttons" },
+        { key = "plumber", label = "Plumber Difficulty Selector" },
     }
 
     for _, skin in ipairs(skins) do

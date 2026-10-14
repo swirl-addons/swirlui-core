@@ -370,7 +370,7 @@ local function SetupDB()
         skinAuras = { enabled = true, width = 37, height = 37, fontSize = 12 },
         skinExtraButtons = { enabled = true },
         lfgFont = { enabled = true },
-        skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true },
+        skins = { enabled = true, rareScanner = true, waypointUI = false, opie = true, plumber = true },
         ellesmere = { powerTextAboveCastbar = true, tooltipTargetLine = true },
         tooltip = { guildRank = true },
         zenPilgrimage = { enabled = true, size = 48, offsetX = 0, offsetY = 150 },
